@@ -4,7 +4,7 @@ import {Button} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {fetchPosts, logoutUser} from '../actions';
 import Post from '../components/post/Post';
-
+//hi
 class Home extends Component {
 
     constructor(props) {
