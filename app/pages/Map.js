@@ -184,14 +184,15 @@ class Map extends Component {
                     {markers.markers.map(marker => (
                         <Marker
                             key={marker.id}
-                            coordinate={{
-                                latitude: marker.coordinate.latitude,
-                                longitude: marker.coordinate.longitude
-                            }}
+                            coordinate={marker.coordinate}
                             title={marker.title}
                             icon={require('../assets/icons/park-icon2.png')}
                         />
                     ))}
+                    /*TODO:
+                       - make icons by type
+                    *  - add callview on click
+                    *  - add api */
 
 
                 </MapView>
