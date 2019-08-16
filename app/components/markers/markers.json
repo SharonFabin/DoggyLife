@@ -1,6 +1,7 @@
 {
   "markers": [
     {
+      "id": 1,
       "coordinate": {
         "latitude": 31.745794,
         "longitude": 34.982561
@@ -8,6 +9,7 @@
       "title": "פארק הדשא הגדול"
     },
     {
+      "id": 2,
       "coordinate": {
         "latitude": 31.743582,
         "longitude": 34.988201
@@ -15,6 +17,7 @@
       "title": "פארק ברנקו וייס"
     },
     {
+      "id": 3,
       "coordinate": {
         "latitude": 31.746120,
         "longitude": 34.981224

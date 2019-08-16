@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, PermissionsAndroid, Button, List} from 'react-native';
+import {Button, PermissionsAndroid, StyleSheet, View} from 'react-native';
 import MapView, {AnimatedRegion, Marker} from "react-native-maps";
-import mapStyle from "../constants/mapStyle";
+import {noLabelNightStyle, retroStyle} from "../constants/mapStyles";
 import Geolocation from 'react-native-geolocation-service';
 import {connect} from "react-redux";
 import {updateLocation, watchLocation} from "../actions";
+import markers from '../components/markers/markers';
 
 const LATITUDE_DELTA = 0.009;
 const LONGITUDE_DELTA = 0.009;
@@ -17,6 +18,7 @@ class Map extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            mapStyle: retroStyle,
             latitude: LATITUDE,
             longitude: LONGITUDE,
             routeCoordinates: [],
@@ -44,8 +46,8 @@ class Map extends Component {
                     region: {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
+                        latitudeDelta: 0.02,
+                        longitudeDelta: 0.02,
                     }
                 });
             },
@@ -127,6 +129,9 @@ class Map extends Component {
 
     getLocation = () => {
         alert(this.state.region.latitude + " " + this.state.region.longitude);
+        this.setState({
+            mapStyle: noLabelNightStyle
+        });
         // Geolocation.getCurrentPosition(
         //     (position) => {
         //         console.log(position);
@@ -161,28 +166,34 @@ class Map extends Component {
         return (
             <View style={styles.container}>
                 <Button title="get location" onPress={this.getLocation.bind(this)}/>
-                <MapView style={styles.map} customMapStyle={mapStyle}
+                <MapView style={styles.map} customMapStyle={this.state.mapStyle}
                          initialRegion={{
                              latitude: LATITUDE,
                              longitude: LONGITUDE,
-                             latitudeDelta: 0.0922,
-                             longitudeDelta: 0.0421,
+                             latitudeDelta: 0.02,
+                             longitudeDelta: 0.02,
                          }}
                          region={{
                              latitude: LATITUDE,
                              longitude: LONGITUDE,
-                             latitudeDelta: 0.0922,
-                             longitudeDelta: 0.0421,
+                             latitudeDelta: 0.02,
+                             longitudeDelta: 0.02,
                          }}
-                         >
+                >
                     {this.renderMarks()}
-                    <Marker
-                        coordinate={{
-                            latitude: 31.746120,
-                            longitude: 34.981224
-                        }}
-                        title="פארק כלבים שוופס"
-                    />
+                    {markers.markers.map(marker => (
+                        <Marker
+                            key={marker.id}
+                            coordinate={{
+                                latitude: marker.coordinate.latitude,
+                                longitude: marker.coordinate.longitude
+                            }}
+                            title={marker.title}
+                            icon={require('../assets/icons/park-icon2.png')}
+                        />
+                    ))}
+
+
                 </MapView>
             </View>
         );
