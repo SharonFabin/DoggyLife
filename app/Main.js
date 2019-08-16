@@ -5,6 +5,7 @@ import ReduxThunk from 'redux-thunk';
 import reducer from './reducers';
 import {store} from './store';
 
+
 export default class Main extends Component {
     render() {
         return (

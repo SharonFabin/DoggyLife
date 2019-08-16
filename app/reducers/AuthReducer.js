@@ -14,8 +14,7 @@ const INITIAL_STATE = {
     loading: false,
     user: null,
 };
-
-
+//esti shmena
 const auth = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case AUTH_CREATE_USER:
@@ -31,7 +30,10 @@ const auth = (state = INITIAL_STATE, action) => {
         case AUTH_LOGIN_USER_SUCCESS:
             return {...state, loading: false, error: ''};
         case AUTH_USER_FAIL:
-            return {...state, ...INITIAL_STATE};
+            return {
+                ...state,
+                ...INITIAL_STATE
+            };
         default:
             return state;
     }

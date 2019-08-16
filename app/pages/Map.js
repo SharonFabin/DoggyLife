@@ -11,6 +11,7 @@ const LONGITUDE_DELTA = 0.009;
 const LATITUDE = 31.738318;
 const LONGITUDE = 34.98372;
 
+
 class Map extends Component {
 
     constructor(props) {
@@ -175,6 +176,13 @@ class Map extends Component {
                          }}
                          >
                     {this.renderMarks()}
+                    <Marker
+                        coordinate={{
+                            latitude: 31.746120,
+                            longitude: 34.981224
+                        }}
+                        title="פארק כלבים שוופס"
+                    />
                 </MapView>
             </View>
         );
