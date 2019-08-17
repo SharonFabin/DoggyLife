@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Image, ScrollView, TouchableOpacity, StyleSheet} from 'react-native';
+import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 import {fetchProfile} from '../actions/ProfileActions';
 import {fetchPosts} from '../actions/PostActions';
@@ -22,7 +22,7 @@ class Profile extends Component {
         }
     };
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.fetchProfile();
         this.props.fetchHighlights();
     }
