@@ -11,5 +11,7 @@ export {default as EditHighlight} from './EditHighlight';
 export {default as AddPost} from './AddPost';
 export {default as Welcome} from './Welcome';
 export {default as Map} from './Map';
+export {default as Chat} from './Chat';
+
 
 

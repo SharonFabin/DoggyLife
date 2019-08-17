@@ -1,17 +1,12 @@
 import React, {Component} from 'react';
-import {View, ActivityIndicator, StyleSheet, ImageBackground, TextInput, TouchableOpacity} from 'react-native';
-import {Input, Text, Button} from 'react-native-elements';
-import NiceInput from '../components/NiceInput';
+import {ImageBackground, StyleSheet, View} from 'react-native';
+import {Button, Input, Text} from 'react-native-elements';
 //import Input from '../components/Input';
-import Title from '../components/Title';
-import NiceButton from "../components/NiceButton";
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
-import {loginUser, checkAuth} from '../actions';
-import firebase from "firebase";
-import {firebaseConfig} from '../settings';
-import {WaveIndicator, MaterialIndicator,} from 'react-native-indicators';
-import {fonts, colors, sizes} from '../constants/theme';
+import {loginUser} from '../actions';
+import {MaterialIndicator,} from 'react-native-indicators';
+import {colors, sizes} from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
@@ -45,10 +40,6 @@ class Login extends Component {
         Actions.signup();
     };
 
-    onPressMap = () => {
-        Actions.map();
-    };
-
     renderButtons() {
         if (this.props.auth.loading) {
             return (
@@ -62,11 +53,6 @@ class Login extends Component {
                     <Button
                         title="Login"
                         onPress={this.onPressLogin.bind(this)}
-                        buttonStyle={styles.buttonStyle}
-                    />
-                    <Button
-                        title="Map"
-                        onPress={this.onPressMap.bind(this)}
                         buttonStyle={styles.buttonStyle}
                     />
                     <Button

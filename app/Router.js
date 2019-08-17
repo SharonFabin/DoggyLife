@@ -1,20 +1,22 @@
 import React from 'react';
-import {Router, Stack, Scene, Tabs} from 'react-native-router-flux';
+import {Router, Scene, Stack, Tabs} from 'react-native-router-flux';
+
 
 import {
-    Welcome,
-    Login,
-    Signup,
     AddPost,
+    Chat,
     ConfigPost,
-    Home,
-    Explore,
-    Profile,
-    EditProfile,
     CreateHighlight,
     EditHighlight,
+    EditProfile,
+    Explore,
     Highlight,
-    Map
+    Home,
+    Login,
+    Map,
+    Profile,
+    Signup,
+    Welcome
 } from './pages';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -24,6 +26,8 @@ const ExploreIcon = () => <Icon name="search" size={25}/>;
 const AddPostIcon = () => <Icon name="plus" size={25}/>;
 const ProfileIcon = () => <Icon name="user" size={25}/>;
 const MapIcon = () => <Icon name="map" size={25}/>;
+const ChatIcon = () => <Icon name="comment" size={25}/>;
+
 
 const RouterComponent = () => (
     <Router>
@@ -41,6 +45,7 @@ const RouterComponent = () => (
                     <Scene key="explore" component={Explore} icon={ExploreIcon}/>
                     <Scene key="profile" component={Profile} icon={ProfileIcon} hideNavBar/>
                     <Scene key="map" component={Map} icon={MapIcon} hideNavBar hideTabBar/>
+                    <Scene key="chat" component={Chat} icon={ChatIcon} hideNavBar hideTabBar/>
                 </Tabs>
 
                 <Scene key="configPost" component={ConfigPost}/>
