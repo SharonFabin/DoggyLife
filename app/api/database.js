@@ -5,14 +5,17 @@ import {firebaseConfig} from "../settings";
 class Database {
 
     uid = '';
-    user = null;
+    userProfile = null;
     messagesRef = null;
 
     constructor() {
         if (!firebase.apps.length)
             firebase.initializeApp(firebaseConfig);
         this.messagesRef = firebase.database().ref('messages');
-        firebase.auth().onAuthStateChanged(user => {
+    }
+
+    authSubscription(dispatch, successAction, failAction) {
+        return firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 this.uid = user.uid;
                 firebase
@@ -20,15 +23,16 @@ class Database {
                     .ref(`/users/${user.uid}/profile`)
                     .once('value')
                     .then(snapshot => {
-                        this.user = snapshot.val();
+                        this.userProfile = snapshot.val();
+                        successAction(dispatch, user);
                     })
-                    .catch(err => alert(err));
-            }
+                    .catch(err => failAction(err));
+            } else failAction(dispatch);
         });
     }
 
     get getUser() {
-        return this.user;
+        return this.userProfile;
     }
 
     get getUid() {
@@ -81,7 +85,7 @@ class Database {
                 text,
                 user,
                 createdAt: this.timestamp,
-                avatar: this.user.userpic
+                avatar: this.userProfile.userpic
             };
             this.messagesRef.push(message);
         }
