@@ -1,14 +1,21 @@
 import React, {Component} from 'react';
-import {ImageBackground, StyleSheet, View} from 'react-native';
-import {Button, Input, Text} from 'react-native-elements';
+import {
+    Dimensions,
+    Image,
+    ImageBackground,
+    KeyboardAvoidingView,
+    StyleSheet,
+    TouchableOpacity,
+    View
+} from 'react-native';
+import {Button, Text} from 'react-native-elements';
 //import Input from '../components/Input';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 import {loginUser} from '../actions';
 import {MaterialIndicator,} from 'react-native-indicators';
-import {colors, sizes} from '../constants/theme';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
+import UserInput from "../components/UserInput";
+import AnimatedButton from "../components/AnimatedButton";
 
 class Login extends Component {
 
@@ -73,46 +80,48 @@ class Login extends Component {
     }
 
     render() {
-        let pic = require('../assets/blur-bg.jpg');
         return (
-            <ImageBackground
-                source={pic}
-                style={{width: '100%', height: '100%'}}>
-                <View style={styles.container}>
-                    <Text h3 style={styles.title}>Doggy Meet</Text>
-                    <Input
-                        placeholder='Email'
-                        leftIcon={<Icon name='user' size={24} color={colors.black}/>}
-                        leftIconContainerStyle={styles.iconContainerStyle}
-                        containerStyle={styles.inputContainer}
-                        inputContainerStyle={styles.inputInputContainer}
-                        inputStyle={styles.inputInput}
-                        onChangeText={this.onChangeUser.bind(this)}
-                        onSubmitEditing={() => {
-                            this.secondTextInput.focus();
-                        }}
-                        value={this.state.user}
-                    />
-                    <Input
-                        placeholder='Password'
-                        leftIcon={<Icon name='eye' size={24} color={colors.black}/>}
-                        leftIconContainerStyle={styles.iconContainerStyle}
-                        containerStyle={styles.inputContainer}
-                        inputContainerStyle={styles.inputInputContainer}
-                        inputStyle={styles.inputInput}
-                        ref={(input) => {
-                            this.secondTextInput = input;
-                        }}
-                        onChangeText={this.onChangePassword.bind(this)}
-                        value={this.state.password}
-                        secureTextEntry
-                    />
-                    <Text>{this.props.auth.errorLoging}</Text>
-                    {this.renderButtons()}
+            <ImageBackground style={styles.background}
+                             source={{uri: "https://www.navitasventures.com/wp-content/uploads/2016/06/Material-design-background-514054880_2126x1416.jpeg"}}>
+                <View style={styles.logoContainer}>
+                    <Image source={{uri: "http://materialdesignblog.com/wp-content/uploads/2015/10/1-Monstroid.png"}}
+                           style={styles.image}/>
+                    <Text style={styles.text}>DOGGY LIFE</Text>
                 </View>
+                <KeyboardAvoidingView behavior="padding" style={styles.container}>
+                    <UserInput
+                        source={'user'}
+                        placeholder="Username"
+                        autoCapitalize={'none'}
+                        returnKeyType={'done'}
+                        autoCorrect={false}
+                    />
+                    <UserInput
+                        source={'lock'}
+
+                        placeholder="Password"
+                        returnKeyType={'done'}
+                        autoCapitalize={'none'}
+                        autoCorrect={false}
+                    />
+                    <TouchableOpacity
+                        activeOpacity={0.7}
+                        style={styles.btnEye}
+                    >
+
+                    </TouchableOpacity>
+                </KeyboardAvoidingView>
+                <View style={styles.section}>
+                    <Text style={styles.sectionText}>Create Account</Text>
+                    <Text style={styles.sectionText}>Forgot Password?</Text>
+                </View>
+                <AnimatedButton/>
             </ImageBackground>
+
+
         );
     }
+
 }
 
 const mapStateToProps = state => ({
@@ -124,62 +133,53 @@ export default connect(
     {loginUser}
 )(Login);
 
+
+const DEVICE_WIDTH = Dimensions.get('window').width;
+const DEVICE_HEIGHT = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
+    background: {
+        width: '100%',
+        height: '100%'
+    },
+    logoContainer: {
+        flex: 3,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    image: {
+        width: 80,
+        height: 80,
+    },
+    text: {
+        color: 'white',
+        fontWeight: 'bold',
+        backgroundColor: 'transparent',
+        marginTop: 20,
+    },
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
     },
-    mid: {
-        alignItems: 'center',
-        justifyContent: 'center',
+    btnEye: {
+        position: 'absolute',
+        top: 55,
+        right: 28,
     },
-    inputContainer: {
-        width: 300,
-        height: 50,
+    iconEye: {
+        width: 25,
+        height: 25,
+        tintColor: 'rgba(0,0,0,0.2)',
     },
-    inputInputContainer: {
+    section: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderBottomColor: 'white'
+        top: 65,
+        width: DEVICE_WIDTH,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
     },
-    inputInput: {
-        color: 'white'
-    },
-    iconContainerStyle: {
-        paddingRight: 10,
-        width: 40,
-    },
-    buttonText: {
-        fontSize: 20,
-        color: 'white'
-    },
-    title: {
-        fontWeight: 'bold',
-        color: colors.white,
-        marginBottom: 20,
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: {width: -1, height: 1},
-        textShadowRadius: 10
-    },
-    buttonStyle: {
-        backgroundColor: colors.accent,
-        borderRadius: sizes.radius,
-        width: 200
-    },
-    headerWrapper: {
-        borderBottomColor: colors.white,
-        borderBottomWidth: 2,
-        marginBottom: 30,
-    },
-
-
-    text: {
+    sectionText: {
         color: 'white',
-        fontSize: sizes.base,
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: {width: -1, height: 1},
-        textShadowRadius: 10
-    }
+        backgroundColor: 'transparent',
+    },
 });
