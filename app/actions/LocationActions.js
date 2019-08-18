@@ -1,8 +1,6 @@
 import firebase from "firebase";
 import Geolocation from 'react-native-geolocation-service';
-import {LOCATION_USERS_UPDATE, LOCATION_UPDATE} from "../constants/ActionTypes";
-import {Actions} from "react-native-router-flux";
-import {locationRef} from "../api/firebase";
+import {LOCATION_UPDATE, LOCATION_USERS_UPDATE} from "../constants/ActionTypes";
 
 
 const updateLocatoin1 = () => {

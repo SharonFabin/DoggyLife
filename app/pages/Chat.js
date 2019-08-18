@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet} from 'react-native';
-import {connect} from "react-redux";
 import {GiftedChat} from 'react-native-gifted-chat'
+import database from "../api/database";
 
 
 class Chat extends Component {
@@ -14,20 +14,16 @@ class Chat extends Component {
     }
 
     componentDidMount() {
-        this.setState({
-            messages: [
-                {
-                    _id: 1,
-                    text: 'Hello developer',
-                    createdAt: new Date(),
-                    user: {
-                        _id: 2,
-                        name: 'React Native',
-                        avatar: 'https://placeimg.com/140/140/any',
-                    },
-                },
-            ],
-        })
+        database.loadMessages(message =>
+            this.setState(previousState => ({
+                messages: GiftedChat.append(previousState.messages, message),
+            }))
+        );
+
+    }
+
+    componentWillUnmount() {
+        database.closeChat();
     }
 
     onSend(messages = []) {
@@ -40,20 +36,18 @@ class Chat extends Component {
         return (
             <GiftedChat
                 messages={this.state.messages}
-                onSend={messages => this.onSend(messages)}
+                onSend={message => database.sendMessage(message)}
                 user={{
-                    _id: 1,
+                    _id: database.getUid,
+                    name: database.getUser.username,
+                    avatar: 'https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png',
                 }}
+                showUserAvatar={true}
             />
         )
     }
 }
 
-const mapStateToProps = state => ({});
-
-export default connect(
-    mapStateToProps,
-    {}
-)(Chat);
+export default Chat;
 
 const styles = StyleSheet.create({});
