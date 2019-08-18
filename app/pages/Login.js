@@ -1,19 +1,11 @@
 import React, {Component} from 'react';
-import {
-    Dimensions,
-    Image,
-    ImageBackground,
-    KeyboardAvoidingView,
-    StyleSheet,
-    TouchableOpacity,
-    View
-} from 'react-native';
+import {Dimensions, Image, ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Button, Text} from 'react-native-elements';
 //import Input from '../components/Input';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 import {loginUser} from '../actions';
-import {MaterialIndicator,} from 'react-native-indicators';
+import {BallIndicator,} from 'react-native-indicators';
 import UserInput from "../components/UserInput";
 import AnimatedButton from "../components/AnimatedButton";
 
@@ -50,8 +42,8 @@ class Login extends Component {
     renderButtons() {
         if (this.props.auth.loading) {
             return (
-                <View style={{height: 40}}>
-                    <MaterialIndicator color="white"/>
+                <View style={{height: 39}}>
+                    <BallIndicator color="white"/>
                 </View>
             );
         } else {
@@ -83,39 +75,44 @@ class Login extends Component {
         return (
             <ImageBackground style={styles.background}
                              source={{uri: "https://www.navitasventures.com/wp-content/uploads/2016/06/Material-design-background-514054880_2126x1416.jpeg"}}>
-                <View style={styles.logoContainer}>
+                <View style={styles.fullContainer}>
                     <Image source={{uri: "http://materialdesignblog.com/wp-content/uploads/2015/10/1-Monstroid.png"}}
                            style={styles.image}/>
                     <Text style={styles.text}>DOGGY LIFE</Text>
-                </View>
-                <KeyboardAvoidingView behavior="padding" style={styles.container}>
-                    <UserInput
-                        source={'user'}
-                        placeholder="Username"
-                        autoCapitalize={'none'}
-                        returnKeyType={'done'}
-                        autoCorrect={false}
-                    />
-                    <UserInput
-                        source={'lock'}
+                    <View>
+                        <UserInput
+                            source={'user'}
+                            placeholder="Username"
+                            autoCapitalize={'none'}
+                            returnKeyType={'done'}
+                            autoCorrect={false}
+                        />
+                        <UserInput
+                            source={'lock'}
 
-                        placeholder="Password"
-                        returnKeyType={'done'}
-                        autoCapitalize={'none'}
-                        autoCorrect={false}
-                    />
-                    <TouchableOpacity
-                        activeOpacity={0.7}
-                        style={styles.btnEye}
-                    >
+                            placeholder="Password"
+                            returnKeyType={'done'}
+                            autoCapitalize={'none'}
+                            autoCorrect={false}
+                        />
 
-                    </TouchableOpacity>
-                </KeyboardAvoidingView>
-                <View style={styles.section}>
-                    <Text style={styles.sectionText}>Create Account</Text>
-                    <Text style={styles.sectionText}>Forgot Password?</Text>
+                        <TouchableOpacity
+                            activeOpacity={0.7}
+                            style={styles.btnEye}
+                        >
+
+                        </TouchableOpacity>
+                    </View>
+                    <AnimatedButton
+                        title={"LOGIN"}
+                    />
+                    <View style={styles.section}>
+                        <Text style={styles.sectionText}>Create Account</Text>
+                        <Text style={styles.sectionText}>Forgot Password?</Text>
+                    </View>
                 </View>
-                <AnimatedButton/>
+
+
             </ImageBackground>
 
 
@@ -142,20 +139,22 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%'
     },
+    fullContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     logoContainer: {
-        flex: 3,
+        flex: 2,
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    image: {
-        width: 80,
-        height: 80,
     },
     text: {
         color: 'white',
         fontWeight: 'bold',
         backgroundColor: 'transparent',
         marginTop: 20,
+        marginBottom: 40
     },
     container: {
         flex: 1,
@@ -172,8 +171,7 @@ const styles = StyleSheet.create({
         tintColor: 'rgba(0,0,0,0.2)',
     },
     section: {
-        flex: 1,
-        top: 65,
+        marginTop: 10,
         width: DEVICE_WIDTH,
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -182,4 +180,8 @@ const styles = StyleSheet.create({
         color: 'white',
         backgroundColor: 'transparent',
     },
+    image: {
+        width: 80,
+        height: 80
+    }
 });

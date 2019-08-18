@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         color: '#ffffff',
     },
     inputWrapper: {
-        flex: 1,
+        marginBottom: 15
     },
     inlineImg: {
         position: 'absolute',

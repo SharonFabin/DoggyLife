@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, Animated, Dimensions, Easing, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Animated, Dimensions, Easing, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Actions} from 'react-native-router-flux';
+import {SkypeIndicator} from 'react-native-indicators';
+
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 // const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -34,7 +36,7 @@ export default class AnimatedButton extends Component {
         }, 2000);
 
         setTimeout(() => {
-            Actions.secondScreen();
+            Actions.signup()
             this.setState({isLoading: false});
             this.buttonAnimated.setValue(0);
             this.growAnimated.setValue(0);
@@ -67,9 +69,9 @@ export default class AnimatedButton extends Component {
                         onPress={this._onPress}
                         activeOpacity={1}>
                         {this.state.isLoading ? (
-                            <ActivityIndicator/>
+                            <SkypeIndicator color={"white"} size={20}/>
                         ) : (
-                            <Text style={styles.text}>LOGIN</Text>
+                            <Text style={styles.text}>{this.props.title}</Text>
                         )}
                     </TouchableOpacity>
                     <Animated.View
@@ -83,15 +85,13 @@ export default class AnimatedButton extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        top: -95,
         alignItems: 'center',
         justifyContent: 'flex-start',
     },
     button: {
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#F035E0',
+        backgroundColor: 'orange',
         height: MARGIN,
         borderRadius: 20,
         zIndex: 100,
@@ -101,11 +101,11 @@ const styles = StyleSheet.create({
         width: MARGIN,
         marginTop: -MARGIN,
         borderWidth: 1,
-        borderColor: '#F035E0',
+        borderColor: 'orange',
         borderRadius: 100,
         alignSelf: 'center',
         zIndex: 99,
-        backgroundColor: '#F035E0',
+        backgroundColor: 'orange',
     },
     text: {
         color: 'white',
