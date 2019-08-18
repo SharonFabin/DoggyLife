@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native';
 import {GiftedChat} from 'react-native-gifted-chat'
 import database from "../api/database";
 
+//meow
 
 class Chat extends Component {
 
