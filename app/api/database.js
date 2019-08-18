@@ -7,6 +7,7 @@ class Database {
     uid = '';
     userProfile = null;
     messagesRef = null;
+    authSubscription = null;
 
     constructor() {
         if (!firebase.apps.length)
@@ -14,8 +15,8 @@ class Database {
         this.messagesRef = firebase.database().ref('messages');
     }
 
-    authSubscription(dispatch, successAction, failAction) {
-        return firebase.auth().onAuthStateChanged(user => {
+    authSubscribe(dispatch, successAction, failAction) {
+        this.authSubscription = firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 this.uid = user.uid;
                 firebase
@@ -28,7 +29,12 @@ class Database {
                     })
                     .catch(err => failAction(err));
             } else failAction(dispatch);
+            this.authUnsubscribe();
         });
+    }
+
+    authUnsubscribe() {
+        if (this.authSubscription) this.authSubscription();
     }
 
     get getUser() {

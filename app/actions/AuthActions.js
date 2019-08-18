@@ -11,7 +11,6 @@ import firebase from 'firebase';
 import {Actions} from 'react-native-router-flux';
 import database from "../api/database";
 
-var authSubscription;
 
 export const createUser = (email, password) => {
     return dispatch => {
@@ -68,7 +67,7 @@ const createUserSuccess = (dispatch, user) => {
 export const checkAuth = () => {
     return dispatch => {
         dispatch({type: AUTH_LOGIN_USER});
-        authSubscription = database.authSubscription(dispatch, loginUserSuccess, userNotAuthenticated);
+        database.authSubscribe(dispatch, loginUserSuccess, userNotAuthenticated);
 
         // firebase
         //     .auth()
@@ -105,7 +104,7 @@ const loginUserSuccess = (dispatch, user) => {
         type: AUTH_LOGIN_USER_SUCCESS,
         payload: user
     });
-    if (authSubscription) authSubscription();
+
     Actions.app();
 };
 
@@ -121,7 +120,7 @@ export const logoutUser = () => {
 
 const logoutUserSuccess = dispatch => {
     dispatch({type: AUTH_LOGIN_USER_FAIL});
-    if (authSubscription) authSubscription();
+
     Actions.auth();
 };
 
