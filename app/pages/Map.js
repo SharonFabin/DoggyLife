@@ -6,7 +6,6 @@ import Geolocation from 'react-native-geolocation-service';
 import {connect} from "react-redux";
 import {updateLocation, watchLocation} from "../actions";
 import markers from '../components/markers/markers';
-import park from '../assets/icons/park-icon2.png'
 
 const LATITUDE_DELTA = 0.009;
 const LONGITUDE_DELTA = 0.009;
@@ -154,21 +153,10 @@ class Map extends Component {
         // );
     };
 
-    renderUsersMarks() {
+    renderMarks() {
         return this.props.location.locations.map(location =>
             <Marker coordinate={location} key={location.uid} title={location.uid}/>
         );
-    }
-
-    renderPointsOfInterest() {
-        return markers.markers.map(marker => (
-            <Marker
-                key={marker.id}
-                coordinate={marker.coordinate}
-                title={marker.title}
-                icon={park}
-            />
-        ))
     }
 
 
@@ -192,8 +180,19 @@ class Map extends Component {
                              longitudeDelta: 0.02,
                          }}
                 >
-                    {this.renderUsersMarks()}
-                    {this.renderPointsOfInterest()}
+                    {this.renderMarks()}
+                    {markers.markers.map(marker => (
+                        <Marker
+                            key={marker.id}
+                            coordinate={{
+                                latitude: marker.coordinate.latitude,
+                                longitude: marker.coordinate.longitude
+                            }}
+                            title={marker.title}
+                            icon={require('../assets/icons/park-icon2.png')}
+                        />
+                    ))}
+
 
                 </MapView>
             </View>

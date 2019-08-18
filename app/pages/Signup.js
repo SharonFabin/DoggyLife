@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import Button from '../components/Button';
-import Input from '../components/Input';
+import {Input} from 'react-native-elements';
 import Title from '../components/Title';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { createUser } from '../actions/AuthActions';
+import Iconnion from "react-native-vector-icons/FontAwesome";
+import {colors} from "../constants/theme";
+import { Icon } from 'react-native-elements';
 
 class Signup extends Component {
   state = {
@@ -44,14 +47,42 @@ class Signup extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Title title="Instagram" />
-        <Input placeholder="email@gmail.com" onChange={this.onChangeUser.bind(this)} value={this.state.user} />
-        <Input
-          placeholder="password"
-          secureTextEntry
-          onChange={this.onChangePassword.bind(this)}
-          value={this.state.password}
+        <Title title="Register" />
+        <Icon
+            name="paw"
+            iconStyle={styles.IconCenter}
         />
+
+        <Input
+            placeholder="email@gmail.com"
+            leftIcon={<Iconnion name='envelope' size={24} color={colors.black}/>}
+            leftIconContainerStyle={styles.iconContainerStyle}
+            containerStyle={styles.inputContainer}
+            inputContainerStyle={styles.inputInputContainer}
+            inputStyle={styles.inputInput}
+            onChange={this.onChangeUser.bind(this)}
+            onSubmitEditing={() => {
+              this.secondTextInput.focus();
+            }}
+            value={this.state.user}
+        />
+
+        <Input
+            placeholder='password'
+            secureTextEntry
+            leftIcon={<Iconnion name='key' size={24} color={colors.black}/>}
+            leftIconContainerStyle={styles.iconContainerStyle}
+            containerStyle={styles.inputContainer}
+            inputContainerStyle={styles.inputInputContainer}
+            inputStyle={styles.inputInput}
+            onChangeText={this.onChangePassword.bind(this)}
+            onSubmitEditing={() => {
+              this.secondTextInput.focus();
+            }}
+            value={this.state.password}
+        />
+
+
         <Text>{this.props.auth.errorCreating}</Text>
         {this.renderButtons()}
         <TouchableOpacity onPress={this.onGoBack.bind(this)}>
@@ -78,10 +109,31 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'cornflowerblue'
   },
   text: {
     color: 'blue',
     fontSize: 15
+  },
+  inputInputContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomColor: 'white'
+  },
+  inputContainer: {
+    width: 300,
+    height: 50,
+  },
+  inputInput: {
+    color: 'white'
+  },
+  iconContainerStyle: {
+    paddingRight: 10,
+    width: 40,
+  },
+  IconCenter:{
+    textAlign: 'center'
   }
+
 });
