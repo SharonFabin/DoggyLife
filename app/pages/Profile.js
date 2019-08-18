@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ImageBackground, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 import {fetchProfile} from '../actions/ProfileActions';
 import {fetchPosts} from '../actions/PostActions';
@@ -7,7 +7,7 @@ import {fetchHighlights} from '../actions/HighlightActions';
 import Button from '../components/Button';
 import Header from '../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import {Avatar, Card, Icon, Image, Text} from 'react-native-elements';
 import Post from '../components/post/Post';
 import HighlightIcon from '../components/HighlightIcon';
 import {Actions} from 'react-native-router-flux';
@@ -48,7 +48,7 @@ class Profile extends Component {
 
     renderImage() {
         if (this.state.userpic) {
-            return <Image style={{width: 100, height: 100, borderRadius: 50}} source={{uri: this.state.userpic}}/>;
+            return <Image style={styles2.profilePic} source={{uri: this.state.userpic}}/>;
         } else {
             return <Text>Loading image...</Text>;
         }
@@ -128,7 +128,7 @@ class Profile extends Component {
         }
     }
 
-    render() {
+    defaultRen() {
         return (
             <View style={styles.container}>
                 <Header title={this.state.username}/>
@@ -226,6 +226,59 @@ class Profile extends Component {
             </View>
         );
     }
+
+    renderPost() {
+        const posts = this.state.postsArray;
+        const keys = this.state.postsKeys;
+        return posts.map((post, i) => {
+            return <Post {...post} key={keys[i]} postKey={keys[i]}/>;
+        });
+    }
+
+    render() {
+        let pic = 'http://www.puppyhavenatl.com/wp-content/uploads/2018/02/Doggy-Daycare-JRT-1024x732.jpg';
+        return (
+            <ImageBackground source={{uri: this.state.userpic}} style={styles2.backgroundContainer}
+                             imageStyle={styles2.backgroundImage}>
+                <View style={styles2.statusContainer}>
+                    <Text h2 style={styles2.title}>{this.state.username}</Text>
+                    <Avatar
+                        rounded
+                        source={{uri: this.state.userpic}}
+                        size='xlarge'
+                        title={this.state.username}
+                        containerStyle={styles2.avatar}
+                    />
+                </View>
+
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={styles2.container}>
+                        <View style={styles2.column}>
+                            <Text h4>Friends</Text>
+                            <Text h4>{this.state.followers}</Text>
+                        </View>
+                        <View style={styles2.column}>
+                            <Text h4>Posts</Text>
+                            <Text h4>{this.state.posts}</Text>
+                        </View>
+                    </View>
+                    <Card
+                        title='HELLO WORLD'
+                        image={{uri: this.state.userpic}}>
+                        <Text style={{marginBottom: 10}}>
+                            The idea with React Native Elements is more about component structure than actual design.
+                        </Text>
+                        <Button
+                            icon={<Icon name='code' color='#ffffff'/>}
+                            backgroundColor='#03A9F4'
+                            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                            title='VIEW NOW'/>
+                    </Card>
+                    {this.renderPosts()}
+                </ScrollView>
+            </ImageBackground>
+        );
+    }
 }
 
 const mapStateToProps = state => ({
@@ -269,5 +322,36 @@ const styles = StyleSheet.create({
     },
     storie: {
         width: 90
+    }
+});
+
+const styles2 = StyleSheet.create({
+    backgroundContainer: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    backgroundImage: {
+        opacity: 0.6
+    },
+    statusContainer: {
+        alignItems: 'center',
+        marginBottom: 10
+    },
+    avatar: {
+        borderColor: 'white',
+        borderWidth: 2
+    },
+    title: {
+        marginTop: 20,
+        color: 'white',
+        fontFamily: 'ChelseaMarket-Regular'
+    },
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+    },
+    column: {
+        alignItems: 'center'
     }
 });
