@@ -14,7 +14,8 @@ class Login extends Component {
         super(props);
         this.state = {
             user: '',
-            password: ''
+            password: '',
+            text: 'LOGIN'
         };
 
         this.onPressLogin.bind(this);
@@ -37,6 +38,9 @@ class Login extends Component {
     checkSuccess() {
         if (this.props.auth.errorLoging === '') {
             this.animatedButton.current.success();
+            this.setState({
+                text: ''
+            });
             setTimeout(() => {
                 Actions.app();
             }, 700);
@@ -96,7 +100,7 @@ class Login extends Component {
                     </View>
                     <AnimatedButton
                         ref={this.animatedButton}
-                        title={"LOGIN"}
+                        title={this.state.text}
                         onPress={this.onPressLogin}
                         loading={this.props.auth.loading}
                     />
