@@ -1,49 +1,38 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Dimensions, StyleSheet, TextInput, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class UserInput extends Component {
     render() {
+        const {style, placeholderTextColor, underlineColorAndroid, ...otherProps} = this.props;
         return (
             <View style={styles.inputWrapper}>
-                <Icon name={this.props.source} style={styles.inlineImg} size={20} color={'white'}/>
+                <Icon name={this.props.source} style={styles.inlineImg} size={20} color={'black'}/>
                 <TextInput
                     style={styles.input}
-                    placeholder={this.props.placeholder}
-                    secureTextEntry={this.props.secureTextEntry}
-                    autoCorrect={this.props.autoCorrect}
-                    autoCapitalize={this.props.autoCapitalize}
-                    returnKeyType={this.props.returnKeyType}
-                    placeholderTextColor="white"
+                    placeholderTextColor="black"
                     underlineColorAndroid="transparent"
+                    ref={this.props.refer}
+                    {...otherProps}
                 />
             </View>
         );
     }
 }
 
-UserInput.propTypes = {
-    source: PropTypes.number.isRequired,
-    placeholder: PropTypes.string.isRequired,
-    secureTextEntry: PropTypes.bool,
-    autoCorrect: PropTypes.bool,
-    autoCapitalize: PropTypes.string,
-    returnKeyType: PropTypes.string,
-};
-
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     input: {
-        backgroundColor: 'rgba(255, 255, 255, 0.4)',
+        backgroundColor: 'rgba(255, 255, 255, 0.65)',
         width: DEVICE_WIDTH - 40,
         height: 40,
         marginHorizontal: 20,
         paddingLeft: 45,
         borderRadius: 20,
-        color: '#ffffff',
+        color: 'black',
+        fontSize: 16
     },
     inputWrapper: {
         marginBottom: 15

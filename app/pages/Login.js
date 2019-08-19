@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {Dimensions, Image, ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Button, Text} from 'react-native-elements';
+import {Text} from 'react-native-elements';
 //import Input from '../components/Input';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 import {loginUser} from '../actions';
-import {BallIndicator,} from 'react-native-indicators';
 import UserInput from "../components/UserInput";
 import AnimatedButton from "../components/AnimatedButton";
 
@@ -15,8 +14,11 @@ class Login extends Component {
         super(props);
         this.state = {
             user: '',
-            password: ''
+            password: '',
+            loading: true
         };
+        this.animatedButtonRef = React.createRef();
+        this.onPressLogin.bind(this);
     }
 
     onChangeUser = text => {
@@ -32,49 +34,25 @@ class Login extends Component {
     };
 
     onPressLogin = () => {
-        this.props.loginUser(this.state.user, this.state.password);
+        //this.props.loginUser(this.state.user, this.state.password);
+        //alert("hi2");
+        this.setState({
+            loading: !this.state.loading
+        });
+        this.animatedButtonRef.current.changeSuccess(this.state.loading);
     };
 
     onPressSignUp = () => {
         Actions.signup();
     };
 
-    renderButtons() {
-        if (this.props.auth.loading) {
-            return (
-                <View style={{height: 39}}>
-                    <BallIndicator color="white"/>
-                </View>
-            );
-        } else {
-            return (
-                <View style={styles.mid}>
-                    <Button
-                        title="Login"
-                        onPress={this.onPressLogin.bind(this)}
-                        buttonStyle={styles.buttonStyle}
-                    />
-                    <Button
-                        title="Forgot your password?"
-                        onPress={this.onPressSignUp.bind(this)}
-                        titleStyle={styles.text}
-                        type="clear"
-                    />
-                    <Button
-                        title="Signup"
-                        onPress={this.onPressSignUp.bind(this)}
-                        titleStyle={styles.text}
-                        type="clear"
-                    />
-                </View>
-            );
-        }
-    }
 
     render() {
         return (
             <ImageBackground style={styles.background}
-                             source={{uri: "https://www.navitasventures.com/wp-content/uploads/2016/06/Material-design-background-514054880_2126x1416.jpeg"}}>
+                             source={{uri: "https://www.rover.com/blog/wp-content/uploads/2018/04/ThinkstockPhotos-485251240-960x540.jpg"}}
+                             imageStyle={styles.backgroundImage}
+            >
                 <View style={styles.fullContainer}>
                     <Image source={{uri: "http://materialdesignblog.com/wp-content/uploads/2015/10/1-Monstroid.png"}}
                            style={styles.image}/>
@@ -86,25 +64,37 @@ class Login extends Component {
                             autoCapitalize={'none'}
                             returnKeyType={'done'}
                             autoCorrect={false}
+                            onChangeText={this.onChangeUser.bind(this)}
+                            onSubmitEditing={() => {
+                                this.secondTextInput.focus();
+                            }}
+                            value={this.state.user}
                         />
                         <UserInput
                             source={'lock'}
-
+                            secureTextEntry={true}
                             placeholder="Password"
                             returnKeyType={'done'}
                             autoCapitalize={'none'}
                             autoCorrect={false}
+                            refer={(input) => {
+                                this.secondTextInput = input;
+                            }}
+                            onChangeText={this.onChangePassword.bind(this)}
+                            value={this.state.password}
                         />
-
+                        <Text>{this.props.auth.errorLoging}</Text>
                         <TouchableOpacity
-                            activeOpacity={0.7}
-                            style={styles.btnEye}
+                            onPress={this.updateAnimatedButton.bind(this)}
                         >
-
+                            <Text>Create Account</Text>
                         </TouchableOpacity>
                     </View>
                     <AnimatedButton
+                        ref={this.animatedButtonRef}
                         title={"LOGIN"}
+                        onPress={this.onPressLogin}
+                        loading={this.state.loading}
                     />
                     <View style={styles.section}>
                         <Text style={styles.sectionText}>Create Account</Text>
@@ -138,6 +128,9 @@ const styles = StyleSheet.create({
     background: {
         width: '100%',
         height: '100%'
+    },
+    backgroundImage: {
+        opacity: 0.8
     },
     fullContainer: {
         flex: 1,

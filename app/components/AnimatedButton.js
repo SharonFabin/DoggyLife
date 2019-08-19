@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Animated, Dimensions, Easing, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Actions} from 'react-native-router-flux';
 import {SkypeIndicator} from 'react-native-indicators';
 
 
@@ -8,42 +7,43 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 // const DEVICE_HEIGHT = Dimensions.get('window').height;
 const MARGIN = 40;
 
+
 export default class AnimatedButton extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
-            isLoading: false,
+            loading: false
         };
 
         this.buttonAnimated = new Animated.Value(0);
         this.growAnimated = new Animated.Value(0);
-        this._onPress = this._onPress.bind(this);
+        this.onPress = this.onPress.bind(this);
+        this.changeState = this.changeState.bind(this);
     }
 
-    _onPress() {
-        if (this.state.isLoading) return;
+    componentDidMount() {
+        this.buttonAnimated = new Animated.Value(0);
+        this.growAnimated = new Animated.Value(0);
+    }
 
-        this.setState({isLoading: true});
+    changeState(success) {
+        if (success)
+            this.success();
+        else this.errorOccurred();
+    }
+
+    onPress() {
+        if (this.props.loading) return;
+        this.props.onPress();
         Animated.timing(this.buttonAnimated, {
             toValue: 1,
             duration: 200,
             easing: Easing.linear,
         }).start();
-
-        setTimeout(() => {
-            this._onGrow();
-        }, 2000);
-
-        setTimeout(() => {
-            Actions.signup()
-            this.setState({isLoading: false});
-            this.buttonAnimated.setValue(0);
-            this.growAnimated.setValue(0);
-        }, 2300);
     }
 
-    _onGrow() {
+    success() {
         Animated.timing(this.growAnimated, {
             toValue: 1,
             duration: 200,
@@ -51,7 +51,17 @@ export default class AnimatedButton extends Component {
         }).start();
     }
 
+    errorOccurred() {
+        Animated.timing(this.buttonAnimated, {
+            toValue: 0,
+            duration: 200,
+            easing: Easing.linear,
+        }).start();
+    }
+
     render() {
+
+
         const changeWidth = this.buttonAnimated.interpolate({
             inputRange: [0, 1],
             outputRange: [DEVICE_WIDTH - MARGIN, MARGIN],
@@ -66,9 +76,9 @@ export default class AnimatedButton extends Component {
                 <Animated.View style={{width: changeWidth}}>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={this._onPress}
+                        onPress={this.onPress}
                         activeOpacity={1}>
-                        {this.state.isLoading ? (
+                        {this.props.loading ? (
                             <SkypeIndicator color={"white"} size={20}/>
                         ) : (
                             <Text style={styles.text}>{this.props.title}</Text>
