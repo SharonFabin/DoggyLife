@@ -91,7 +91,7 @@ class Login extends Component {
                         onSubmitEditing={() => {
                             this.secondTextInput.focus();
                         }}
-                        value={this.state.user}
+                        value={this.state.user}  
                     />
                     <Input
                         placeholder='Password'
