@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import {firebaseConfig} from "../settings";
+import {Actions} from "react-native-router-flux";
 
 
 class Database {
@@ -25,7 +26,7 @@ class Database {
                     .once('value')
                     .then(snapshot => {
                         this.userProfile = snapshot.val();
-                        successAction(dispatch, user);
+                        successAction(dispatch, user, Actions.app());
                     })
                     .catch(err => failAction(err));
             } else failAction(dispatch);

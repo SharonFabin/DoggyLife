@@ -83,29 +83,30 @@ const userNotAuthenticated = dispatch => {
     Actions.login();
 };
 
-export const loginUser = (email, password) => {
+export const loginUser = (email, password, action) => {
     return dispatch => {
         dispatch({type: AUTH_LOGIN_USER});
 
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
-            .then(user => loginUserSuccess(dispatch, user))
-            .catch(() => loginUserFail(dispatch));
+            .then(user => loginUserSuccess(dispatch, user, action))
+            .catch(() => loginUserFail(dispatch, action));
     };
 };
 
-const loginUserFail = dispatch => {
+const loginUserFail = (dispatch, action) => {
     dispatch({type: AUTH_LOGIN_USER_FAIL});
+    action();
 };
 
-const loginUserSuccess = (dispatch, user) => {
+const loginUserSuccess = (dispatch, user, action) => {
     dispatch({
         type: AUTH_LOGIN_USER_SUCCESS,
         payload: user
     });
 
-    Actions.app();
+    action();
 };
 
 export const logoutUser = () => {

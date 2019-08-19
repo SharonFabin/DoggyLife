@@ -1,10 +1,10 @@
 import {
-    AUTH_LOGIN_USER,
-    AUTH_LOGIN_USER_FAIL,
-    AUTH_LOGIN_USER_SUCCESS,
     AUTH_CREATE_USER,
     AUTH_CREATE_USER_FAIL,
     AUTH_CREATE_USER_SUCCESS,
+    AUTH_LOGIN_USER,
+    AUTH_LOGIN_USER_FAIL,
+    AUTH_LOGIN_USER_SUCCESS,
     AUTH_USER_FAIL
 } from '../constants/ActionTypes';
 
@@ -28,7 +28,7 @@ const auth = (state = INITIAL_STATE, action) => {
         case AUTH_LOGIN_USER_FAIL:
             return {...state, errorLoging: 'Login failed! Please check the credentials!', loading: false};
         case AUTH_LOGIN_USER_SUCCESS:
-            return {...state, loading: false, error: ''};
+            return {...state, loading: false, errorLoging: ''};
         case AUTH_USER_FAIL:
             return {
                 ...state,

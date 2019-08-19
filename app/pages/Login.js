@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Dimensions, Image, ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Dimensions, Image, ImageBackground, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-elements';
 //import Input from '../components/Input';
 import {Actions} from 'react-native-router-flux';
@@ -14,11 +14,12 @@ class Login extends Component {
         super(props);
         this.state = {
             user: '',
-            password: '',
-            loading: true
+            password: ''
         };
-        this.animatedButtonRef = React.createRef();
+
         this.onPressLogin.bind(this);
+        this.loginSuccess = this.loginSuccess.bind(this);
+        this.animatedButton = React.createRef();
     }
 
     onChangeUser = text => {
@@ -33,19 +34,17 @@ class Login extends Component {
         });
     };
 
+    loginSuccess() {
+        this.animatedButton.current.changeState(this.props.auth.errorLoging)
+    }
+
     onPressLogin = () => {
-        //this.props.loginUser(this.state.user, this.state.password);
-        //alert("hi2");
-        this.setState({
-            loading: !this.state.loading
-        });
-        this.animatedButtonRef.current.changeSuccess(this.state.loading);
+        this.props.loginUser(this.state.user, this.state.password, this.loginSuccess);
     };
 
     onPressSignUp = () => {
         Actions.signup();
     };
-
 
     render() {
         return (
@@ -84,17 +83,12 @@ class Login extends Component {
                             value={this.state.password}
                         />
                         <Text>{this.props.auth.errorLoging}</Text>
-                        <TouchableOpacity
-                            onPress={this.updateAnimatedButton.bind(this)}
-                        >
-                            <Text>Create Account</Text>
-                        </TouchableOpacity>
                     </View>
                     <AnimatedButton
-                        ref={this.animatedButtonRef}
+                        ref={this.animatedButton}
                         title={"LOGIN"}
                         onPress={this.onPressLogin}
-                        loading={this.state.loading}
+                        loading={this.props.auth.loading}
                     />
                     <View style={styles.section}>
                         <Text style={styles.sectionText}>Create Account</Text>

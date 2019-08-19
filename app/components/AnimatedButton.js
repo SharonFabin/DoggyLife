@@ -27,8 +27,8 @@ export default class AnimatedButton extends Component {
         this.growAnimated = new Animated.Value(0);
     }
 
-    changeState(success) {
-        if (success)
+    changeState(error) {
+        if (error === '')
             this.success();
         else this.errorOccurred();
     }
