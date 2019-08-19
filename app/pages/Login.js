@@ -18,7 +18,7 @@ class Login extends Component {
         };
 
         this.onPressLogin.bind(this);
-        this.loginSuccess = this.loginSuccess.bind(this);
+        this.checkSuccess = this.checkSuccess.bind(this);
         this.animatedButton = React.createRef();
     }
 
@@ -34,12 +34,22 @@ class Login extends Component {
         });
     };
 
-    loginSuccess() {
-        this.animatedButton.current.changeState(this.props.auth.errorLoging)
+    checkSuccess() {
+        if (this.props.auth.errorLoging === '') {
+            this.animatedButton.current.success();
+            setTimeout(() => {
+                Actions.app();
+            }, 700);
+
+
+        } else {
+            this.animatedButton.current.errorOccurred();
+        }
+
     }
 
     onPressLogin = () => {
-        this.props.loginUser(this.state.user, this.state.password, this.loginSuccess);
+        this.props.loginUser(this.state.user, this.state.password, this.checkSuccess);
     };
 
     onPressSignUp = () => {

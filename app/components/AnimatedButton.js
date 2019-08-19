@@ -19,18 +19,11 @@ export default class AnimatedButton extends Component {
         this.buttonAnimated = new Animated.Value(0);
         this.growAnimated = new Animated.Value(0);
         this.onPress = this.onPress.bind(this);
-        this.changeState = this.changeState.bind(this);
     }
 
     componentDidMount() {
         this.buttonAnimated = new Animated.Value(0);
         this.growAnimated = new Animated.Value(0);
-    }
-
-    changeState(error) {
-        if (error === '')
-            this.success();
-        else this.errorOccurred();
     }
 
     onPress() {
