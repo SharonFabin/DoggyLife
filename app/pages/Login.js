@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
-import {ImageBackground, StyleSheet, View} from 'react-native';
-import {Button, Input, Text} from 'react-native-elements';
+import {Dimensions, Image, ImageBackground, StyleSheet, View} from 'react-native';
+import {Text} from 'react-native-elements';
 //import Input from '../components/Input';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 import {loginUser} from '../actions';
-import {MaterialIndicator,} from 'react-native-indicators';
-import {colors, sizes} from '../constants/theme';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
+import UserInput from "../components/UserInput";
+import AnimatedButton from "../components/AnimatedButton";
 
 class Login extends Component {
 
@@ -18,6 +16,10 @@ class Login extends Component {
             user: '',
             password: ''
         };
+
+        this.onPressLogin.bind(this);
+        this.checkSuccess = this.checkSuccess.bind(this);
+        this.animatedButton = React.createRef();
     }
 
     onChangeUser = text => {
@@ -32,87 +34,85 @@ class Login extends Component {
         });
     };
 
+    checkSuccess() {
+        if (this.props.auth.errorLoging === '') {
+            this.animatedButton.current.success();
+            setTimeout(() => {
+                Actions.app();
+            }, 700);
+
+
+        } else {
+            this.animatedButton.current.errorOccurred();
+        }
+
+    }
+
     onPressLogin = () => {
-        this.props.loginUser(this.state.user, this.state.password);
+        this.props.loginUser(this.state.user, this.state.password, this.checkSuccess);
     };
 
     onPressSignUp = () => {
         Actions.signup();
     };
 
-    renderButtons() {
-        if (this.props.auth.loading) {
-            return (
-                <View style={{height: 40}}>
-                    <MaterialIndicator color="white"/>
-                </View>
-            );
-        } else {
-            return (
-                <View style={styles.mid}>
-                    <Button
-                        title="Login"
-                        onPress={this.onPressLogin.bind(this)}
-                        buttonStyle={styles.buttonStyle}
-                    />
-                    <Button
-                        title="Forgot your password?"
-                        onPress={this.onPressSignUp.bind(this)}
-                        titleStyle={styles.text}
-                        type="clear"
-                    />
-                    <Button
-                        title="Signup"
-                        onPress={this.onPressSignUp.bind(this)}
-                        titleStyle={styles.text}
-                        type="clear"
-                    />
-                </View>
-            );
-        }
-    }
-
     render() {
-        let pic = require('../assets/blur-bg.jpg');
         return (
-            <ImageBackground
-                source={pic}
-                style={{width: '100%', height: '100%'}}>
-                <View style={styles.container}>
-                    <Text h3 style={styles.title}>Doggy Meet</Text>
-                    <Input
-                        placeholder='Email'
-                        leftIcon={<Icon name='user' size={24} color={colors.black}/>}
-                        leftIconContainerStyle={styles.iconContainerStyle}
-                        containerStyle={styles.inputContainer}
-                        inputContainerStyle={styles.inputInputContainer}
-                        inputStyle={styles.inputInput}
-                        onChangeText={this.onChangeUser.bind(this)}
-                        onSubmitEditing={() => {
-                            this.secondTextInput.focus();
-                        }}
-                        value={this.state.user}
+            <ImageBackground style={styles.background}
+                             source={{uri: "https://www.rover.com/blog/wp-content/uploads/2018/04/ThinkstockPhotos-485251240-960x540.jpg"}}
+                             imageStyle={styles.backgroundImage}
+            >
+                <View style={styles.fullContainer}>
+                    <Image source={{uri: "http://materialdesignblog.com/wp-content/uploads/2015/10/1-Monstroid.png"}}
+                           style={styles.image}/>
+                    <Text style={styles.text}>DOGGY LIFE</Text>
+                    <View>
+                        <UserInput
+                            source={'user'}
+                            placeholder="Username"
+                            autoCapitalize={'none'}
+                            returnKeyType={'done'}
+                            autoCorrect={false}
+                            onChangeText={this.onChangeUser.bind(this)}
+                            onSubmitEditing={() => {
+                                this.secondTextInput.focus();
+                            }}
+                            value={this.state.user}
+                        />
+                        <UserInput
+                            source={'lock'}
+                            secureTextEntry={true}
+                            placeholder="Password"
+                            returnKeyType={'done'}
+                            autoCapitalize={'none'}
+                            autoCorrect={false}
+                            refer={(input) => {
+                                this.secondTextInput = input;
+                            }}
+                            onChangeText={this.onChangePassword.bind(this)}
+                            value={this.state.password}
+                        />
+                        <Text>{this.props.auth.errorLoging}</Text>
+                    </View>
+                    <AnimatedButton
+                        ref={this.animatedButton}
+                        title={"LOGIN"}
+                        onPress={this.onPressLogin}
+                        loading={this.props.auth.loading}
                     />
-                    <Input
-                        placeholder='Password'
-                        leftIcon={<Icon name='eye' size={24} color={colors.black}/>}
-                        leftIconContainerStyle={styles.iconContainerStyle}
-                        containerStyle={styles.inputContainer}
-                        inputContainerStyle={styles.inputInputContainer}
-                        inputStyle={styles.inputInput}
-                        ref={(input) => {
-                            this.secondTextInput = input;
-                        }}
-                        onChangeText={this.onChangePassword.bind(this)}
-                        value={this.state.password}
-                        secureTextEntry
-                    />
-                    <Text>{this.props.auth.errorLoging}</Text>
-                    {this.renderButtons()}
+                    <View style={styles.section}>
+                        <Text style={styles.sectionText}>Create Account</Text>
+                        <Text style={styles.sectionText}>Forgot Password?</Text>
+                    </View>
                 </View>
+
+
             </ImageBackground>
+
+
         );
     }
+
 }
 
 const mapStateToProps = state => ({
@@ -124,62 +124,61 @@ export default connect(
     {loginUser}
 )(Login);
 
+
+const DEVICE_WIDTH = Dimensions.get('window').width;
+const DEVICE_HEIGHT = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
+    background: {
+        width: '100%',
+        height: '100%'
+    },
+    backgroundImage: {
+        opacity: 0.8
+    },
+    fullContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    logoContainer: {
+        flex: 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    text: {
+        color: 'white',
+        fontWeight: 'bold',
+        backgroundColor: 'transparent',
+        marginTop: 20,
+        marginBottom: 40
+    },
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
     },
-    mid: {
-        alignItems: 'center',
-        justifyContent: 'center',
+    btnEye: {
+        position: 'absolute',
+        top: 55,
+        right: 28,
     },
-    inputContainer: {
-        width: 300,
-        height: 50,
+    iconEye: {
+        width: 25,
+        height: 25,
+        tintColor: 'rgba(0,0,0,0.2)',
     },
-    inputInputContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderBottomColor: 'white'
+    section: {
+        marginTop: 10,
+        width: DEVICE_WIDTH,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
     },
-    inputInput: {
-        color: 'white'
-    },
-    iconContainerStyle: {
-        paddingRight: 10,
-        width: 40,
-    },
-    buttonText: {
-        fontSize: 20,
-        color: 'white'
-    },
-    title: {
-        fontWeight: 'bold',
-        color: colors.white,
-        marginBottom: 20,
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: {width: -1, height: 1},
-        textShadowRadius: 10
-    },
-    buttonStyle: {
-        backgroundColor: colors.accent,
-        borderRadius: sizes.radius,
-        width: 200
-    },
-    headerWrapper: {
-        borderBottomColor: colors.white,
-        borderBottomWidth: 2,
-        marginBottom: 30,
-    },
-
-
-    text: {
+    sectionText: {
         color: 'white',
-        fontSize: sizes.base,
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: {width: -1, height: 1},
-        textShadowRadius: 10
+        backgroundColor: 'transparent',
+    },
+    image: {
+        width: 80,
+        height: 80
     }
 });
