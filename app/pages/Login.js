@@ -60,6 +60,17 @@ class Login extends Component {
         Actions.signup();
     };
 
+    renderErrors() {
+        if (this.props.auth.errorLoging !== '') {
+            return (
+                <View style={styles.errorsContainer}>
+                    <Text style={styles.errorText}>{this.props.auth.errorLoging}</Text>
+                </View>
+            );
+        }
+        return;
+    }
+
     render() {
         return (
             <ImageBackground style={styles.background}
@@ -84,7 +95,7 @@ class Login extends Component {
                             value={this.state.user}
                         />
                         <UserInput
-                            source={'lock'}
+                            source={'eye'}
                             secureTextEntry={true}
                             placeholder="Password"
                             returnKeyType={'done'}
@@ -96,8 +107,9 @@ class Login extends Component {
                             onChangeText={this.onChangePassword.bind(this)}
                             value={this.state.password}
                         />
-                        <Text>{this.props.auth.errorLoging}</Text>
                     </View>
+                    {this.renderErrors()}
+
                     <AnimatedButton
                         ref={this.animatedButton}
                         title={this.state.text}
@@ -161,15 +173,16 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
-    btnEye: {
-        position: 'absolute',
-        top: 55,
-        right: 28,
+    errorsContainer: {
+        alignItems: 'center',
+        marginBottom: 10
     },
-    iconEye: {
-        width: 25,
-        height: 25,
-        tintColor: 'rgba(0,0,0,0.2)',
+    errorText: {
+        color: 'red',
+        fontSize: 18,
+        textShadowColor: 'rgba(255, 0, 0, 0.9)',
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 10
     },
     section: {
         marginTop: 10,

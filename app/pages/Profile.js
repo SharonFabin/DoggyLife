@@ -241,27 +241,28 @@ class Profile extends Component {
             <ImageBackground source={{uri: this.state.userpic}} style={styles2.backgroundContainer}
                              imageStyle={styles2.backgroundImage}>
                 <View style={styles2.statusContainer}>
-                    <Text h2 style={styles2.title}>{this.state.username}</Text>
-                    <Avatar
-                        rounded
-                        source={{uri: this.state.userpic}}
-                        size='xlarge'
-                        title={this.state.username}
-                        containerStyle={styles2.avatar}
-                    />
+                    <View style={styles2.column}>
+                        <Text h4 style={styles2.statusText}>Friends</Text>
+                        <Text h4 style={styles2.statusText}>{this.state.followers}</Text>
+                    </View>
+                    <View style={styles2.avatarContainer}>
+                        <Text h2 style={styles2.title}>{this.state.username}</Text>
+                        <Avatar
+                            rounded
+                            source={{uri: this.state.userpic}}
+                            size='xlarge'
+                            title={this.state.username}
+                            containerStyle={styles2.avatar}
+                        />
+                    </View>
+                    <View style={styles2.column}>
+                        <Text h4 style={styles2.statusText}>Posts</Text>
+                        <Text h4 style={styles2.statusText}>{this.state.posts}</Text>
+                    </View>
                 </View>
 
+
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <View style={styles2.container}>
-                        <View style={styles2.column}>
-                            <Text h4>Friends</Text>
-                            <Text h4>{this.state.followers}</Text>
-                        </View>
-                        <View style={styles2.column}>
-                            <Text h4>Posts</Text>
-                            <Text h4>{this.state.posts}</Text>
-                        </View>
-                    </View>
                     <Card
                         title='HELLO WORLD'
                         image={{uri: this.state.userpic}}>
@@ -334,6 +335,11 @@ const styles2 = StyleSheet.create({
         opacity: 0.6
     },
     statusContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
+    avatarContainer: {
         alignItems: 'center',
         marginBottom: 10
     },
@@ -344,7 +350,16 @@ const styles2 = StyleSheet.create({
     title: {
         marginTop: 20,
         color: 'white',
-        fontFamily: 'ChelseaMarket-Regular'
+        fontFamily: 'ChelseaMarket-Regular',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 10
+    },
+    statusText: {
+        color: 'rgb(255,255,255)',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 10
     },
     container: {
         flex: 1,
@@ -352,6 +367,7 @@ const styles2 = StyleSheet.create({
         justifyContent: 'space-around'
     },
     column: {
-        alignItems: 'center'
+        alignItems: 'center',
+        color: 'white'
     }
 });
