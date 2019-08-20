@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {Button, PermissionsAndroid, StyleSheet, View} from 'react-native';
 import MapView, {AnimatedRegion, Marker} from "react-native-maps";
-import {noLabelNightStyle, retroStyle} from "../constants/mapStyles";
+import {niceStyle2, noLabelNightStyle} from "../constants/mapStyles";
 import Geolocation from 'react-native-geolocation-service';
 import {connect} from "react-redux";
 import {updateLocation, watchLocation} from "../actions";
 import markers from '../components/markers/markers';
-import park from '../assets/icons/park-icon2.png'
+import {Avatar} from "react-native-elements";
 
 const LATITUDE_DELTA = 0.009;
 const LONGITUDE_DELTA = 0.009;
@@ -19,7 +19,7 @@ class Map extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mapStyle: retroStyle,
+            mapStyle: niceStyle2,
             latitude: LATITUDE,
             longitude: LONGITUDE,
             routeCoordinates: [],
@@ -166,8 +166,15 @@ class Map extends Component {
                 key={marker.id}
                 coordinate={marker.coordinate}
                 title={marker.title}
-                icon={park}
-            />
+            >
+                <Avatar
+                    rounded
+                    source={{uri: "https://www.newpawsibilities.com/wp-content/uploads/2018/10/kitana387.jpg"}}
+                    size={'small'}
+                    title={this.state.username}
+                    containerStyle={styles.mapIcon}
+                />
+            </Marker>
         ))
     }
 
@@ -219,5 +226,9 @@ const styles = StyleSheet.create({
     map: {
         width: '100%',
         height: '100%'
+    },
+    mapIcon: {
+        borderColor: '#435158',
+        borderWidth: 2
     }
 });
