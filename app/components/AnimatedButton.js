@@ -39,7 +39,7 @@ export default class AnimatedButton extends Component {
     success() {
         Animated.timing(this.growAnimated, {
             toValue: 1,
-            duration: 200,
+            duration: 700,
             easing: Easing.linear,
         }).start();
     }

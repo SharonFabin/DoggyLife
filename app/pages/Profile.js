@@ -1,290 +1,305 @@
 import React, {Component} from 'react';
-import {ImageBackground, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {FlatList, ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
 import {fetchProfile} from '../actions/ProfileActions';
 import {fetchPosts} from '../actions/PostActions';
 import {fetchHighlights} from '../actions/HighlightActions';
-import Button from '../components/Button';
-import Header from '../components/Header';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Avatar, Card, Icon, Image, Text} from 'react-native-elements';
+import {Avatar, Card, Text} from 'react-native-elements';
 import Post from '../components/post/Post';
-import HighlightIcon from '../components/HighlightIcon';
-import {Actions} from 'react-native-router-flux';
+import {MaterialIndicator,} from 'react-native-indicators';
+import {translate} from "../languageHelper";
+import ImagePicker from 'react-native-image-crop-picker';
+import database from "../api/database";
 
 class Profile extends Component {
-    state = {
-        show: {
-            grid: true,
-            full: false,
-            pinned: false,
-            saved: false
-        }
-    };
 
-    componentDidMount() {
-        this.props.fetchProfile();
-        this.props.fetchHighlights();
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props !== nextProps) {
-            console.log(nextProps);
-            this.setState({
-                name_profile: nextProps.profile.name_profile,
-                username: nextProps.profile.username,
-                userpic: nextProps.profile.userpic,
-                bio: nextProps.profile.bio,
-                posts: nextProps.profile.posts_number,
-                followers: nextProps.profile.followers,
-                following: nextProps.profile.following,
-                all_posts: nextProps.posts,
-                postsKeys: Object.keys(nextProps.posts),
-                postsArray: Object.values(nextProps.posts),
-                highlightsArray: nextProps.highlights
-            });
-        }
-    }
-
-    renderImage() {
-        if (this.state.userpic) {
-            return <Image style={styles2.profilePic} source={{uri: this.state.userpic}}/>;
-        } else {
-            return <Text>Loading image...</Text>;
-        }
-    }
-
-    showGrid() {
-        this.setState({
+    constructor(props) {
+        super(props);
+        this.state = {
             show: {
                 grid: true,
                 full: false,
                 pinned: false,
                 saved: false
-            }
+            },
+            posts: [],
+        };
+
+    }
+
+
+    componentDidMount() {
+        this.props.fetchProfile();
+        this.props.fetchPosts();
+        this.props.fetchHighlights();
+    }
+
+
+    // componentWillReceiveProps(nextProps) {
+    //     if (this.props !== nextProps) {
+    //         console.log(nextProps);
+    //         this.setState({
+    //             name_profile: nextProps.profile.name_profile,
+    //             username: nextProps.profile.username,
+    //             userpic: nextProps.profile.userpic,
+    //             bio: nextProps.profile.bio,
+    //             posts: nextProps.profile.posts_number,
+    //             followers: nextProps.profile.followers,
+    //             following: nextProps.profile.following,
+    //             all_posts: nextProps.posts,
+    //             postsKeys: Object.keys(nextProps.posts),
+    //             postsArray: Object.values(nextProps.posts),
+    //             highlightsArray: nextProps.highlights
+    //         });
+    //     }
+    // }
+
+
+    // goToEdit() {
+    //     Actions.editProfile(this.props.profile);
+    // }
+    //
+    // createNewHighlight() {
+    //     Actions.createHighlight({data: this.state.all_posts});
+    // }
+    //
+    // renderHighlights() {
+    //     if (this.state.highlightsArray !== null && this.state.highlightsArray !== undefined) {
+    //         let array = Object.values(this.state.highlightsArray);
+    //         let keys = Object.keys(this.state.highlightsArray);
+    //
+    //         return array.map((highlight, i) => {
+    //             return <HighlightIcon key={keys[i]} {...highlight}
+    //                                   onPress={() => Actions.highlight({data: highlight})}/>;
+    //         });
+    //     } else {
+    //         return <Text>Loading...</Text>;
+    //     }
+    // }
+    //
+    // defaultRen() {
+    //     return (
+    //         <View style={styles.container}>
+    //             <Header title={this.state.username}/>
+    //             <ScrollView contentContainerStyle={{justifyContent: 'center'}} showsVerticalScrollIndicator={false}>
+    //                 <View style={styles.picAndInfo}>
+    //                     {this.renderImage()}
+    //                     <View style={{flexDirection: 'column', marginLeft: 20}}>
+    //                         <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+    //                             <View style={{flexDirection: 'column', margin: 10, marginBottom: 5}}>
+    //                                 <Text style={{
+    //                                     fontSize: 16,
+    //                                     fontWeight: 'bold',
+    //                                     alignSelf: 'center'
+    //                                 }}>{this.state.posts}</Text>
+    //                                 <Text style={{fontSize: 12, color: 'grey'}}>posts</Text>
+    //                             </View>
+    //                             <View style={{flexDirection: 'column', margin: 10, marginBottom: 5}}>
+    //                                 <Text style={{
+    //                                     fontSize: 16,
+    //                                     fontWeight: 'bold',
+    //                                     alignSelf: 'center'
+    //                                 }}>{this.state.followers}</Text>
+    //                                 <Text style={{fontSize: 12, color: 'grey'}}>followers</Text>
+    //                             </View>
+    //                             <View style={{flexDirection: 'column', margin: 10, marginBottom: 5}}>
+    //                                 <Text style={{
+    //                                     fontSize: 16,
+    //                                     fontWeight: 'bold',
+    //                                     alignSelf: 'center'
+    //                                 }}>{this.state.following}</Text>
+    //                                 <Text style={{fontSize: 12, color: 'grey'}}>following</Text>
+    //                             </View>
+    //                         </View>
+    //                         <Button
+    //                             styles={{
+    //                                 width: 200,
+    //                                 height: 30,
+    //                                 backgroundColor: 'white',
+    //                                 borderColor: '#dcdde1',
+    //                                 borderWidth: 1
+    //                             }}
+    //                             textButton="Edit profile"
+    //                             textStyle={{color: 'black'}}
+    //                             onPress={this.goToEdit.bind(this)}
+    //                         />
+    //                     </View>
+    //                 </View>
+    //                 <View style={styles.userBioAndStories}>
+    //                     <Text style={{fontSize: 12, fontWeight: 'bold'}}>{this.state.name_profile}</Text>
+    //                     <Text style={{fontSize: 12}}>{this.state.bio}</Text>
+    //                     <View style={{flexDirection: 'row', marginTop: 10, marginBottom: 30}}>
+    //                         <ScrollView contentContainerStyle={{height: 100}} horizontal
+    //                                     showsHorizontalScrollIndicator={false}>
+    //                             <View style={{flexDirection: 'column'}}>
+    //                                 <TouchableOpacity style={styles.storie}
+    //                                                   onPress={this.createNewHighlight.bind(this)}>
+    //                                     <View>
+    //                                         <Image
+    //                                             style={{width: 80, height: 80}}
+    //                                             source={{
+    //                                                 uri: 'https://image.ibb.co/kxRZNe/image.png'
+    //                                             }}
+    //                                         />
+    //                                     </View>
+    //                                 </TouchableOpacity>
+    //                             </View>
+    //                             {this.renderHighlights()}
+    //                         </ScrollView>
+    //                     </View>
+    //                 </View>
+    //                 <View style={styles.typeView}>
+    //                     <TouchableOpacity onPress={this.showGrid.bind(this)}>
+    //                         <View>
+    //                             <Ionicons
+    //                                 name="md-grid"
+    //                                 size={30}
+    //                                 color={this.state.show.grid ? '#00a8ff' : '#dcdde1'}
+    //                                 style={{marginLeft: 35, marginRight: 35, marginTop: 5, marginBottom: 5}}
+    //                             />
+    //                         </View>
+    //                     </TouchableOpacity>
+    //                     <TouchableOpacity onPress={this.showFull.bind(this)}>
+    //                         <View>
+    //                             <Ionicons
+    //                                 name="md-square-outline"
+    //                                 size={30}
+    //                                 color={this.state.show.full ? '#00a8ff' : '#dcdde1'}
+    //                                 style={{marginLeft: 35, marginRight: 35, marginTop: 5, marginBottom: 5}}
+    //                             />
+    //                         </View>
+    //                     </TouchableOpacity>
+    //                 </View>
+    //                 <View style={{width: '100%', flexDirection: 'row', flexWrap: 'wrap'}}>{this.renderPosts()}</View>
+    //             </ScrollView>
+    //         </View>
+    //     );
+    // }
+
+    renderPost() {
+        const posts = Object.values(this.props.posts.posts);
+        const keys = Object.keys(this.props.posts.posts);
+        return posts.map((post, i) => {
+            return <Post {...post} key={keys[i]} postKey={keys[i]}/>;
         });
     }
 
-    showFull() {
-        this.setState({
-            show: {
-                grid: false,
-                full: true,
-                pinned: false,
-                saved: false
-            }
+    renderPostsCards() {
+        const posts = Object.values(this.props.posts.posts);
+        const keys = Object.keys(this.props.posts.posts);
+        return posts.map((post, i) => {
+            return (
+                <Card key={keys[i]} title={post.title} containerStyle={[styles2.card]} image={{uri: post.image}}>
+                    <View style={styles2.dogView}>
+                        <Text style={{marginBottom: 10}}>
+                            {post.date}
+                        </Text>
+                        {/*<Image source={{uri: post.image}} style={styles2.image}/>*/}
+                    </View>
+                </Card>
+            );
         });
     }
 
-    renderPosts() {
-        if (this.state.show.grid && !this.state.show.full && !this.state.show.pinned && !this.state.show.saved) {
-            if (this.state.postsArray) {
-                const posts = this.state.postsArray;
-                const keys = this.state.postsKeys;
-
-                return posts.map((post, i) => {
-                    return (
-                        <TouchableOpacity key={keys[i]}>
-                            <View>
-                                <Image source={{uri: post.image}} style={{width: 122.5, height: 122.5, margin: 1}}/>
-                            </View>
-                        </TouchableOpacity>
-                    );
-                });
-            }
-        }
-
-        if (!this.state.show.grid && this.state.show.full && !this.state.show.pinned && !this.state.show.saved) {
-            if (this.state.postsArray) {
-                const posts = this.state.postsArray;
-                const keys = this.state.postsKeys;
-
-                return posts.map((post, i) => {
-                    return <Post {...post} key={keys[i]} postKey={keys[i]}/>;
-                });
-            }
-        }
-    }
-
-    goToEdit() {
-        Actions.editProfile(this.props.profile);
-    }
-
-    createNewHighlight() {
-        Actions.createHighlight({data: this.state.all_posts});
-    }
-
-    renderHighlights() {
-        if (this.state.highlightsArray !== null && this.state.highlightsArray !== undefined) {
-            let array = Object.values(this.state.highlightsArray);
-            let keys = Object.keys(this.state.highlightsArray);
-
-            return array.map((highlight, i) => {
-                return <HighlightIcon key={keys[i]} {...highlight}
-                                      onPress={() => Actions.highlight({data: highlight})}/>;
-            });
-        } else {
-            return <Text>Loading...</Text>;
-        }
-    }
-
-    defaultRen() {
+    renderPostsList() {
+        const posts = Object.values(this.props.posts.posts);
+        const keys = Object.keys(this.props.posts.posts);
         return (
-            <View style={styles.container}>
-                <Header title={this.state.username}/>
-                <ScrollView contentContainerStyle={{justifyContent: 'center'}} showsVerticalScrollIndicator={false}>
-                    <View style={styles.picAndInfo}>
-                        {this.renderImage()}
-                        <View style={{flexDirection: 'column', marginLeft: 20}}>
-                            <View style={{flexDirection: 'row', alignSelf: 'center'}}>
-                                <View style={{flexDirection: 'column', margin: 10, marginBottom: 5}}>
-                                    <Text style={{
-                                        fontSize: 16,
-                                        fontWeight: 'bold',
-                                        alignSelf: 'center'
-                                    }}>{this.state.posts}</Text>
-                                    <Text style={{fontSize: 12, color: 'grey'}}>posts</Text>
-                                </View>
-                                <View style={{flexDirection: 'column', margin: 10, marginBottom: 5}}>
-                                    <Text style={{
-                                        fontSize: 16,
-                                        fontWeight: 'bold',
-                                        alignSelf: 'center'
-                                    }}>{this.state.followers}</Text>
-                                    <Text style={{fontSize: 12, color: 'grey'}}>followers</Text>
-                                </View>
-                                <View style={{flexDirection: 'column', margin: 10, marginBottom: 5}}>
-                                    <Text style={{
-                                        fontSize: 16,
-                                        fontWeight: 'bold',
-                                        alignSelf: 'center'
-                                    }}>{this.state.following}</Text>
-                                    <Text style={{fontSize: 12, color: 'grey'}}>following</Text>
-                                </View>
-                            </View>
-                            <Button
-                                styles={{
-                                    width: 200,
-                                    height: 30,
-                                    backgroundColor: 'white',
-                                    borderColor: '#dcdde1',
-                                    borderWidth: 1
-                                }}
-                                textButton="Edit profile"
-                                textStyle={{color: 'black'}}
-                                onPress={this.goToEdit.bind(this)}
-                            />
+            <FlatList
+                data={posts}
+                renderItem={({item}) => (
+                    <Card title={item.title} containerStyle={[styles2.card]} image={{uri: item.image}}>
+                        <View style={styles2.dogView}>
+                            <Text style={{marginBottom: 10}}>
+                                {item.date}
+                            </Text>
                         </View>
-                    </View>
-                    <View style={styles.userBioAndStories}>
-                        <Text style={{fontSize: 12, fontWeight: 'bold'}}>{this.state.name_profile}</Text>
-                        <Text style={{fontSize: 12}}>{this.state.bio}</Text>
-                        <View style={{flexDirection: 'row', marginTop: 10, marginBottom: 30}}>
-                            <ScrollView contentContainerStyle={{height: 100}} horizontal
-                                        showsHorizontalScrollIndicator={false}>
-                                <View style={{flexDirection: 'column'}}>
-                                    <TouchableOpacity style={styles.storie}
-                                                      onPress={this.createNewHighlight.bind(this)}>
-                                        <View>
-                                            <Image
-                                                style={{width: 80, height: 80}}
-                                                source={{
-                                                    uri: 'https://image.ibb.co/kxRZNe/image.png'
-                                                }}
-                                            />
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                                {this.renderHighlights()}
-                            </ScrollView>
-                        </View>
-                    </View>
-                    <View style={styles.typeView}>
-                        <TouchableOpacity onPress={this.showGrid.bind(this)}>
-                            <View>
-                                <Ionicons
-                                    name="md-grid"
-                                    size={30}
-                                    color={this.state.show.grid ? '#00a8ff' : '#dcdde1'}
-                                    style={{marginLeft: 35, marginRight: 35, marginTop: 5, marginBottom: 5}}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={this.showFull.bind(this)}>
-                            <View>
-                                <Ionicons
-                                    name="md-square-outline"
-                                    size={30}
-                                    color={this.state.show.full ? '#00a8ff' : '#dcdde1'}
-                                    style={{marginLeft: 35, marginRight: 35, marginTop: 5, marginBottom: 5}}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{width: '100%', flexDirection: 'row', flexWrap: 'wrap'}}>{this.renderPosts()}</View>
-                </ScrollView>
-            </View>
+                    </Card>
+                )}
+                keyExtractor={(item, index) => index.toString()}
+            />
         );
     }
 
-    renderPost() {
-        const posts = this.state.postsArray;
-        const keys = this.state.postsKeys;
-        return posts.map((post, i) => {
-            return <Post {...post} key={keys[i]} postKey={keys[i]}/>;
+    pickImage() {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true,
+            includeBase64: true,
+        }).then(image => {
+            console.log(image);
+            database.savePicture(image)
+            //alert("Image: "+image+" keys: "+Object.keys(image)+ " data: "+image.data);
         });
     }
 
     render() {
         let pic = 'http://www.puppyhavenatl.com/wp-content/uploads/2018/02/Doggy-Daycare-JRT-1024x732.jpg';
         return (
-            <ImageBackground source={{uri: this.state.userpic}} style={styles2.backgroundContainer}
+            <ImageBackground source={{uri: "https://wallpapershome.com/images/pages/ico_h/3440.jpg"}}
+                             style={styles2.backgroundContainer}
                              imageStyle={styles2.backgroundImage}>
                 <View style={styles2.statusContainer}>
                     <View style={styles2.column}>
-                        <Text h4 style={styles2.statusText}>Friends</Text>
-                        <Text h4 style={styles2.statusText}>{this.state.followers}</Text>
+                        <Text h4 style={styles2.statusText}>{translate("friends")}</Text>
+                        <Text h4 style={styles2.statusText}>{this.props.profile.profile.followers}</Text>
                     </View>
                     <View style={styles2.avatarContainer}>
-                        <Text h2 style={styles2.title}>{this.state.username}</Text>
+                        <Text h2 style={styles2.title}>{this.props.profile.profile.username}</Text>
                         <Avatar
                             rounded
-                            source={{uri: this.state.userpic}}
+                            source={{uri: this.props.profile.profile.userpic}}
                             size='xlarge'
                             title={this.state.username}
                             containerStyle={styles2.avatar}
+                            renderPlaceholderContent={<MaterialIndicator color='white'/>}
+                            showEditButton
+                            onEditPress={this.pickImage}
                         />
                     </View>
                     <View style={styles2.column}>
-                        <Text h4 style={styles2.statusText}>Posts</Text>
-                        <Text h4 style={styles2.statusText}>{this.state.posts}</Text>
+                        <Text h4 style={styles2.statusText}>{translate("posts")}</Text>
+                        <Text h4 style={styles2.statusText}>{this.props.profile.profile.posts_number}</Text>
                     </View>
                 </View>
-
-
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <Card
-                        title='HELLO WORLD'
-                        image={{uri: this.state.userpic}}>
-                        <Text style={{marginBottom: 10}}>
-                            The idea with React Native Elements is more about component structure than actual design.
-                        </Text>
-                        <Button
-                            icon={<Icon name='code' color='#ffffff'/>}
-                            backgroundColor='#03A9F4'
-                            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-                            title='VIEW NOW'/>
+
+
+                    <Card title={translate("my dogs")} containerStyle={styles2.dogContainer}
+                          titleStyle={styles2.subHeader}>
+                        <View style={styles2.dogView}>
+                            <Avatar
+                                rounded
+                                source={{uri: this.props.profile.profile.userpic}}
+                                size='large'
+                                title={this.state.username}
+                                containerStyle={styles2.avatar}
+                                renderPlaceholderContent={<MaterialIndicator color='white'/>}
+                            />
+                            <Avatar
+                                rounded
+                                source={{uri: this.props.profile.profile.userpic}}
+                                size='large'
+                                title={this.state.username}
+                                containerStyle={styles2.avatar}
+                                renderPlaceholderContent={<MaterialIndicator color='white'/>}
+                            />
+                        </View>
                     </Card>
-                    {this.renderPosts()}
+                    {this.renderPostsCards()}
+
                 </ScrollView>
+
+
             </ImageBackground>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    profile: state.profile.profile,
-    posts: state.post.posts,
+    profile: state.profile,
+    posts: state.post,
     highlights: state.highlight.highlights
 });
 
@@ -332,7 +347,7 @@ const styles2 = StyleSheet.create({
         justifyContent: 'center',
     },
     backgroundImage: {
-        opacity: 0.6
+        opacity: 0.8
     },
     statusContainer: {
         flexDirection: 'row',
@@ -367,7 +382,43 @@ const styles2 = StyleSheet.create({
         justifyContent: 'space-around'
     },
     column: {
+        width: 100,
         alignItems: 'center',
         color: 'white'
-    }
+    },
+    dogView: {
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+    },
+    card: {
+        borderWidth: 0,
+        borderTopWidth: 5,
+        borderTopColor: 'rgba(20,20,20,0.7)',
+        borderRadius: 2,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+        marginBottom: 10,
+    },
+    subHeader: {},
+    dogContainer: {
+        width: '100%',
+        margin: 0,
+        backgroundColor: 'rgba(255,255,255,0.8)',
+    },
+    SectionHeader: {
+        backgroundColor: '#64B5F6',
+        fontSize: 20,
+        padding: 5,
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    SectionListItemS: {
+        fontSize: 16,
+        padding: 6,
+        color: '#000',
+        backgroundColor: '#F5F5F5'
+    },
 });

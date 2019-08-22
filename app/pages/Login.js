@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import {Dimensions, Image, ImageBackground, StyleSheet, View} from 'react-native';
-import {Text} from 'react-native-elements';
+import {Input, Text} from 'react-native-elements';
 //import Input from '../components/Input';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 import {loginUser} from '../actions';
-import UserInput from "../components/UserInput";
 import AnimatedButton from "../components/AnimatedButton";
+import {translate} from "../languageHelper";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class Login extends Component {
 
@@ -15,7 +16,7 @@ class Login extends Component {
         this.state = {
             user: '',
             password: '',
-            text: 'LOGIN'
+            text: translate("login")
         };
 
         this.onPressLogin.bind(this);
@@ -74,38 +75,41 @@ class Login extends Component {
     render() {
         return (
             <ImageBackground style={styles.background}
-                             source={{uri: "https://www.rover.com/blog/wp-content/uploads/2018/04/ThinkstockPhotos-485251240-960x540.jpg"}}
+                             source={{uri: "https://www.larutadelsorigens.cat/wallpic/full/10-104862_the-wallpaper-designer-material-design-wallpaper-green.jpg"}}
                              imageStyle={styles.backgroundImage}
             >
                 <View style={styles.fullContainer}>
-                    <Image source={{uri: "http://materialdesignblog.com/wp-content/uploads/2015/10/1-Monstroid.png"}}
-                           style={styles.image}/>
+                    <Image
+                        source={{uri: "https://cdn.freebiesupply.com/logos/large/2x/scooby-doo-7-logo-png-transparent.png"}}
+                        style={styles.image}/>
                     <Text style={styles.text}>DOGGY LIFE</Text>
-                    <View>
-                        <UserInput
-                            source={'user'}
-                            placeholder="Username"
-                            autoCapitalize={'none'}
-                            returnKeyType={'done'}
-                            autoCorrect={false}
+                    <View style={styles.container}>
+                        <Input
+                            placeholder={translate("username")}
+                            leftIcon={<Icon name='user' size={24} color={'black'}/>}
+                            leftIconContainerStyle={styles.iconContainerStyle}
+                            containerStyle={styles.inputContainer}
+                            inputContainerStyle={styles.inputInputContainer}
+                            inputStyle={styles.inputInput}
                             onChangeText={this.onChangeUser.bind(this)}
                             onSubmitEditing={() => {
                                 this.secondTextInput.focus();
                             }}
                             value={this.state.user}
                         />
-                        <UserInput
-                            source={'eye'}
-                            secureTextEntry={true}
-                            placeholder="Password"
-                            returnKeyType={'done'}
-                            autoCapitalize={'none'}
-                            autoCorrect={false}
-                            refer={(input) => {
+                        <Input
+                            placeholder={translate("password")}
+                            leftIcon={<Icon name='eye' size={24} color={'black'}/>}
+                            leftIconContainerStyle={styles.iconContainerStyle}
+                            containerStyle={styles.inputContainer}
+                            inputContainerStyle={styles.inputInputContainer}
+                            inputStyle={styles.inputInput}
+                            ref={(input) => {
                                 this.secondTextInput = input;
                             }}
                             onChangeText={this.onChangePassword.bind(this)}
                             value={this.state.password}
+                            secureTextEntry
                         />
                     </View>
                     {this.renderErrors()}
@@ -117,8 +121,8 @@ class Login extends Component {
                         loading={this.props.auth.loading}
                     />
                     <View style={styles.section}>
-                        <Text style={styles.sectionText}>Create Account</Text>
-                        <Text style={styles.sectionText}>Forgot Password?</Text>
+                        <Text style={styles.sectionText}>{translate("create account")}</Text>
+                        <Text style={styles.sectionText}>{translate("forgot password")}</Text>
                     </View>
                 </View>
 
@@ -169,10 +173,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 40
     },
-    container: {
-        flex: 1,
-        alignItems: 'center',
-    },
     errorsContainer: {
         alignItems: 'center',
         marginBottom: 10
@@ -197,5 +197,36 @@ const styles = StyleSheet.create({
     image: {
         width: 80,
         height: 80
-    }
+    },
+    container: {
+
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inputContainer: {
+        width: DEVICE_WIDTH - 20,
+        height: 40,
+        marginBottom: 10,
+    },
+    inputInputContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 40,
+        borderWidth: 0,
+        backgroundColor: 'rgba(255,255,255,0.65)',
+
+    },
+    inputInput: {
+        color: 'black',
+        fontSize: 16,
+        padding: 0,
+        marginRight: 10
+
+
+    },
+    iconContainerStyle: {
+        paddingRight: 10,
+        width: 40,
+    },
 });

@@ -1,6 +1,10 @@
-import { PROFILE_FETCH, PROFILE_EDIT } from '../constants/ActionTypes';
+import {PROFILE_EDIT, PROFILE_FETCH} from '../constants/ActionTypes';
 
-const INITIAL_STATE = {};
+const INITIAL_STATE = {
+    profile: {
+        userpic: ""
+    }
+};
 
 const profile = (state = INITIAL_STATE, action) => {
   switch (action.type) {

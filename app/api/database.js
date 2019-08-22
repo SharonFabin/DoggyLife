@@ -68,19 +68,6 @@ class Database {
         this.messagesRef.on('child_added', onReceive);
     }
 
-    parse(snapshot) {
-        const {timestamp: numberStamp, text, user} = snapshot.val();
-        const {key: _id} = snapshot;
-        const timestamp = new Date(numberStamp);
-        const message = {
-            _id,
-            timestamp,
-            text,
-            user,
-        };
-        return message;
-    };
-
     get timestamp() {
         return firebase.database.ServerValue.TIMESTAMP;
     }
@@ -99,9 +86,41 @@ class Database {
     };
 
     closeChat() {
-        if (this.messageRef)
-            this.messageRef.off();
+        if (this.messagesRef)
+            this.messagesRef.off();
     }
+
+    savePicture(image) {
+        // Create a root reference
+        var storageRef = firebase.storage().ref();
+
+// Create a reference to 'mountains.jpg'
+        var mountainsRef = storageRef.child('mountains.jpg');
+
+// Create a reference to 'images/mountains.jpg'
+        var mountainImagesRef = storageRef.child('images/mountains.jpg');
+
+// While the file names are the same, the references point to different files
+
+        // storageRef.put(image[0]).then(function (snapshot) {
+        //     console.log('Uploaded a blob or file!');
+        // });
+        //image = '5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
+        image = `data:jpeg;base64,${image.data}`;
+        alert(image);
+        mountainsRef.putString(image, 'base64').then(function (snapshot) {
+            console.log('Uploaded a base64url string!');
+        });
+        mountainsRef.putString(image, 'base64').then(function (snapshot) {
+            console.log('Uploaded a base64url string!');
+        });
+        mountainsRef.putString(image, 'data_url').then(function (snapshot) {
+            console.log('Uploaded a base64url string!');
+        });
+
+
+    }
+
 }
 
 export default new Database();

@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Text, View, ScrollView, StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {fetchPosts, logoutUser} from '../actions';
 import Post from '../components/post/Post';
+
 //hi
 class Home extends Component {
 
@@ -21,7 +22,7 @@ class Home extends Component {
                 posts: nextProps.posts.posts
             };
         }
-        return null
+        return null;
     }
 
     // componentWillReceiveProps(nextProps) {
