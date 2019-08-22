@@ -11,6 +11,7 @@ import {translate} from "../languageHelper";
 import ImagePicker from 'react-native-image-crop-picker';
 import database from "../api/database";
 
+
 class Profile extends Component {
 
     constructor(props) {

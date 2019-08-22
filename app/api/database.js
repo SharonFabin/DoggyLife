@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import {firebaseConfig} from "../settings";
 import {Actions} from "react-native-router-flux";
+import RNFetchBlob from "react-native-fetch-blob";
 
 
 class Database {
@@ -91,35 +92,44 @@ class Database {
     }
 
     savePicture(image) {
-        // Create a root reference
-        var storageRef = firebase.storage().ref();
+        const Blob = RNFetchBlob.polyfill.Blob;
+        const fs = RNFetchBlob.fs;
+        const imagePath = image.path;
 
-// Create a reference to 'mountains.jpg'
-        var mountainsRef = storageRef.child('mountains.jpg');
+        let uploadBlob = null;
 
-// Create a reference to 'images/mountains.jpg'
-        var mountainImagesRef = storageRef.child('images/mountains.jpg');
+        const imageRef = firebase.storage().ref().child("dp.jpg");
+        let mime = 'image/jpg';
+        fs.readFile(imagePath, 'base64')
+            .then((data) => {
+                //console.log(data);
+                return Blob.build(data, {type: `${mime};BASE64`})
+            })
+            .then((blob) => {
+                uploadBlob = blob;
+                return imageRef.put(blob, {contentType: mime})
+            })
+            .then(() => {
+                uploadBlob.close();
+                return imageRef.getDownloadURL()
+            })
+            .then((url) => {
 
-// While the file names are the same, the references point to different files
+                let userData = {};
+                //userData[dpNo] = url
+                //firebase.database().ref('users').child(uid).update({ ...userData})
 
-        // storageRef.put(image[0]).then(function (snapshot) {
-        //     console.log('Uploaded a blob or file!');
-        // });
-        //image = '5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
-        image = `data:jpeg;base64,${image.data}`;
-        alert(image);
-        mountainsRef.putString(image, 'base64').then(function (snapshot) {
-            console.log('Uploaded a base64url string!');
-        });
-        mountainsRef.putString(image, 'base64').then(function (snapshot) {
-            console.log('Uploaded a base64url string!');
-        });
-        mountainsRef.putString(image, 'data_url').then(function (snapshot) {
-            console.log('Uploaded a base64url string!');
-        });
+                let obj = {}
+                obj["loading"] = false
+                obj["dp"] = url
+                this.setState(obj)
 
-
+            })
+            .catch((error) => {
+                console.log(error)
+            });
     }
+
 
 }
 
