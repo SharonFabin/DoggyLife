@@ -277,6 +277,8 @@ class Profile extends Component {
                                 title={this.state.username}
                                 containerStyle={styles2.avatar}
                                 renderPlaceholderContent={<MaterialIndicator color='white'/>}
+                                showEditButton
+                                onEditPress={this.pickImage}
                             />
                             <Avatar
                                 rounded
@@ -285,6 +287,8 @@ class Profile extends Component {
                                 title={this.state.username}
                                 containerStyle={styles2.avatar}
                                 renderPlaceholderContent={<MaterialIndicator color='white'/>}
+                                showEditButton
+                                onEditPress={this.pickImage}
                             />
                         </View>
                     </Card>

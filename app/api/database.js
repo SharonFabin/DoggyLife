@@ -95,10 +95,10 @@ class Database {
         const Blob = RNFetchBlob.polyfill.Blob;
         const fs = RNFetchBlob.fs;
         const imagePath = image.path;
-
         let uploadBlob = null;
+        let url = '';
 
-        const imageRef = firebase.storage().ref().child("dp.jpg");
+        const imageRef = firebase.storage().ref().child(`profile/${this.uid}/images/profile.jpg`);
         let mime = 'image/jpg';
         fs.readFile(imagePath, 'base64')
             .then((data) => {
@@ -115,14 +115,15 @@ class Database {
             })
             .then((url) => {
 
-                let userData = {};
-                //userData[dpNo] = url
-                //firebase.database().ref('users').child(uid).update({ ...userData})
+                firebase
+                    .database()
+                    .ref(`/users/${this.uid}/profile`)
+                    .update({
+                        userpic: url
+                    })
+                    .then(() => {
 
-                let obj = {}
-                obj["loading"] = false
-                obj["dp"] = url
-                this.setState(obj)
+                    });
 
             })
             .catch((error) => {
