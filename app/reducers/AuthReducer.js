@@ -9,30 +9,50 @@ import {
 } from '../constants/ActionTypes';
 
 const INITIAL_STATE = {
-    errorLoging: '',
+    errorLogging: '',
     errorCreating: '',
     loading: false,
-    user: null,
 };
-//esti shmena
+
 const auth = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case AUTH_CREATE_USER:
-            return {...state, ...INITIAL_STATE, loading: true, user: action.payload};
+            return {...state, ...INITIAL_STATE, loading: true};
         case AUTH_CREATE_USER_FAIL:
-            return {...state, errorCreating: 'Creation failed! Please check the credentials!', loading: false};
+            return {
+                ...state,
+                errorLogging: action.err,
+                errorCreating: 'Creation failed! Please check the credentials!',
+                loading: false
+            };
         case AUTH_CREATE_USER_SUCCESS:
-            return {...state, loading: false, error: ''};
-        case AUTH_LOGIN_USER:
-            return {...state, ...INITIAL_STATE, loading: true, user: action.payload};
-        case AUTH_LOGIN_USER_FAIL:
-            return {...state, errorLoging: 'Login failed! Please check the credentials!', loading: false};
-        case AUTH_LOGIN_USER_SUCCESS:
-            return {...state, loading: false, errorLoging: ''};
-        case AUTH_USER_FAIL:
             return {
                 ...state,
                 ...INITIAL_STATE
+            };
+        case AUTH_LOGIN_USER:
+            return {
+                ...state,
+                ...INITIAL_STATE,
+                loading: true,
+            };
+        case AUTH_LOGIN_USER_FAIL:
+            return {
+                ...state,
+                errorLogging: action.err,
+                errorCreating: 'Login failed! Please check the credentials!',
+                loading: false
+            };
+        case AUTH_LOGIN_USER_SUCCESS:
+            return {
+                ...state,
+                ...INITIAL_STATE
+            };
+        case AUTH_USER_FAIL:
+            return {
+                ...state,
+                errorCreating: "Authentication Failed",
+                loading: false
             };
         default:
             return state;

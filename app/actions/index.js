@@ -1,7 +1,8 @@
 export {
+    subscribeToAuthentication,
+    unsubscribeFromAuthentication,
     loginUser,
     createUser,
-    checkAuth,
     logoutUser
 } from './AuthActions';
 

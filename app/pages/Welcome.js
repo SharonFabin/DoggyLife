@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import {View, Text, ActivityIndicator, StyleSheet, ImageBackground, TextInput} from 'react-native';
+import {ImageBackground, StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
-import {loginUser, checkAuth} from '../actions';
-import {WaveIndicator, MaterialIndicator,} from 'react-native-indicators';
-import {Button} from "react-native-elements";
+import {subscribeToAuthentication, unsubscribeFromAuthentication} from '../actions';
+import {MaterialIndicator,} from 'react-native-indicators';
 
 class Welcome extends Component {
 
@@ -12,7 +11,11 @@ class Welcome extends Component {
     }
 
     componentDidMount() {
-        this.props.checkAuth();
+        this.props.subscribeToAuthentication();
+    }
+
+    componentWillUnmount() {
+        //this.props.unsubscribeFromAuthentication();
     }
 
     render() {
@@ -35,7 +38,7 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {checkAuth}
+    {subscribeToAuthentication, unsubscribeFromAuthentication}
 )(Welcome);
 
 const styles = StyleSheet.create({

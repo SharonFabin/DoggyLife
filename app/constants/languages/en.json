@@ -5,6 +5,10 @@
   "logout": "Logout",
   "create account": "Create Account",
   "forgot password": "Forgot Password?",
+  "email": "Email",
+  "confirm password": "Confirm Password",
+  "register": "Register",
+  "welcome": "Welcome",
   "friends": "Friends",
   "posts": "Posts",
   "my dogs": "My dogs"

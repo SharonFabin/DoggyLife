@@ -13,6 +13,9 @@ class Home extends Component {
         this.state = {
             posts: [],
         };
+    }
+
+    componentDidMount() {
         this.props.fetchPosts();
     }
 
@@ -24,14 +27,6 @@ class Home extends Component {
         }
         return null;
     }
-
-    // componentWillReceiveProps(nextProps) {
-    //     if (this.props !== nextProps) {
-    //         this.setState({
-    //             posts: nextProps.posts.posts
-    //         });
-    //     }
-    // }
 
     onPressLogout = () => {
         this.props.logoutUser();

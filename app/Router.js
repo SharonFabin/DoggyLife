@@ -33,8 +33,8 @@ const RouterComponent = () => (
     <Router>
         <Stack key="root">
             <Stack key="auth" hideNavBar>
-                <Scene key="welcome" component={Welcome} type="replace"/>
-                <Scene key="login" component={Login} type="replace"/>
+                <Scene key="welcome" component={Welcome} type="reset"/>
+                <Scene key="login" component={Login} type="replace" unmountScenes={true}/>
                 <Scene key="signup" component={Signup}/>
             </Stack>
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Dimensions, Image, ImageBackground, StyleSheet, View} from 'react-native';
+import {Dimensions, Image, ImageBackground, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Input, Text} from 'react-native-elements';
 //import Input from '../components/Input';
 import {Actions} from 'react-native-router-flux';
@@ -14,7 +14,7 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: '',
+            username: '',
             password: '',
             text: translate("login")
         };
@@ -24,9 +24,17 @@ class Login extends Component {
         this.animatedButton = React.createRef();
     }
 
+    componentDidMount() {
+        alert("hello from login");
+    }
+
+    componentWillUnmount() {
+        alert("bye bye from login");
+    }
+
     onChangeUser = text => {
         this.setState({
-            user: text
+            username: text
         });
     };
 
@@ -37,12 +45,13 @@ class Login extends Component {
     };
 
     checkSuccess() {
-        if (this.props.auth.errorLoging === '') {
+        if (this.props.auth.errorLogging === '') {
             this.animatedButton.current.success();
             this.setState({
                 text: ''
             });
             setTimeout(() => {
+                Actions.reset('auth');
                 Actions.app();
             }, 700);
 
@@ -54,7 +63,7 @@ class Login extends Component {
     }
 
     onPressLogin = () => {
-        this.props.loginUser(this.state.user, this.state.password, this.checkSuccess);
+        this.props.loginUser(this.state.username, this.state.password, this.checkSuccess);
     };
 
     onPressSignUp = () => {
@@ -62,14 +71,29 @@ class Login extends Component {
     };
 
     renderErrors() {
-        if (this.props.auth.errorLoging !== '') {
+        if (this.props.auth.errorLogging !== '') {
             return (
                 <View style={styles.errorsContainer}>
-                    <Text style={styles.errorText}>{this.props.auth.errorLoging}</Text>
+                    <Text style={styles.errorText}>{this.props.auth.errorLogging}</Text>
                 </View>
             );
         }
         return;
+    }
+
+    renderOptions() {
+        if (!this.props.auth.loading) {
+            return (
+                <View style={styles.section}>
+                    <TouchableOpacity onPress={this.onPressSignUp.bind(this)}>
+                        <Text style={styles.sectionText}>{translate("create account")}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Text style={styles.sectionText}>{translate("forgot password")}</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+        }
     }
 
     render() {
@@ -95,7 +119,7 @@ class Login extends Component {
                             onSubmitEditing={() => {
                                 this.secondTextInput.focus();
                             }}
-                            value={this.state.user}
+                            value={this.state.username}
                         />
                         <Input
                             placeholder={translate("password")}
@@ -120,10 +144,9 @@ class Login extends Component {
                         onPress={this.onPressLogin}
                         loading={this.props.auth.loading}
                     />
-                    <View style={styles.section}>
-                        <Text style={styles.sectionText}>{translate("create account")}</Text>
-                        <Text style={styles.sectionText}>{translate("forgot password")}</Text>
-                    </View>
+
+                    {this.renderOptions()}
+
                 </View>
 
 
@@ -174,7 +197,9 @@ const styles = StyleSheet.create({
         marginBottom: 40
     },
     errorsContainer: {
+        justifyContent: 'center',
         alignItems: 'center',
+        alignContent: 'center',
         marginBottom: 10
     },
     errorText: {

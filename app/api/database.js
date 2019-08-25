@@ -1,9 +1,8 @@
 import firebase from 'firebase';
 import {firebaseConfig} from "../settings";
-import {Actions} from "react-native-router-flux";
 import RNFetchBlob from "react-native-fetch-blob";
 
-//meow
+
 class Database {
 
     uid = '';
@@ -17,20 +16,9 @@ class Database {
         this.messagesRef = firebase.database().ref('messages');
     }
 
-    authSubscribe(dispatch, successAction, failAction) {
+    authSubscribe(dispatch, onAuthChanged) {
         this.authSubscription = firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-                this.uid = user.uid;
-                firebase
-                    .database()
-                    .ref(`/users/${user.uid}/profile`)
-                    .once('value')
-                    .then(snapshot => {
-                        this.userProfile = snapshot.val();
-                        successAction(dispatch, user, Actions.app());
-                    })
-                    .catch(err => failAction(err));
-            } else failAction(dispatch);
+            onAuthChanged(dispatch, user);
             this.authUnsubscribe();
         });
     }
@@ -39,16 +27,55 @@ class Database {
         if (this.authSubscription) this.authSubscription();
     }
 
-    get getUser() {
-        return this.userProfile;
+    fetchUser(user) {
+        this.uid = user.uid;
+        return firebase
+            .database()
+            .ref(`/users/${user.uid}/profile`)
+            .once('value')
+            .then(snapshot => this.userProfile = snapshot.val())
     }
 
-    get getUid() {
-        return this.uid
+    loginUser(email, password) {
+        return firebase
+            .auth()
+            .signInWithEmailAndPassword(email, password);
     }
 
-    get getMessagesRef() {
-        return this.messagesRef;
+    logoutUser() {
+        return firebase
+            .auth()
+            .signOut();
+    }
+
+    createUser(username, email, password, image) {
+        return firebase
+            .auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then(() => {
+                const {currentUser} = firebase.auth();
+                this.saveImageGetUrl(image, 'profile')
+                    .then(url => {
+                        return firebase
+                            .database()
+                            .ref(`/users/${currentUser.uid}/`)
+                            .set({
+                                profile: {
+                                    name_profile: username,
+                                    email,
+                                    username,
+                                    password,
+                                    userpic: url,
+                                    posts_number: 0,
+                                    followers: 0,
+                                    following: 0,
+                                    bio: null,
+                                    sex: null
+                                }
+                            });
+                    });
+            })
+
     }
 
     loadMessages(callback) {
@@ -59,7 +86,7 @@ class Database {
                 _id: data.key,
                 text: message.text,
                 createdAt: new Date(message.createdAt),
-                user: {
+                username: {
                     _id: message.user._id,
                     name: message.user.name,
                     avatar: message.avatar
@@ -78,7 +105,7 @@ class Database {
             const {text, user} = messages[i];
             const message = {
                 text,
-                user,
+                user: username,
                 createdAt: this.timestamp,
                 avatar: this.userProfile.userpic
             };
@@ -91,16 +118,20 @@ class Database {
             this.messagesRef.off();
     }
 
-    savePicture(image) {
+    saveImageGetUrl(image, imageName) {
+        if (!image || !imageName) return new Promise(
+            res => res("https://www.certified-parts.com/image/catalog/client/facebookanon.jpg"
+            ));
+
+        const {currentUser} = firebase.auth();
         const Blob = RNFetchBlob.polyfill.Blob;
         const fs = RNFetchBlob.fs;
         const imagePath = image.path;
         let uploadBlob = null;
-        let url = '';
 
-        const imageRef = firebase.storage().ref().child(`profile/${this.uid}/images/profile.jpg`);
+        const imageRef = firebase.storage().ref().child(`profile/${currentUser.uid}/images/${imageName}.jpg`);
         let mime = 'image/jpg';
-        fs.readFile(imagePath, 'base64')
+        return fs.readFile(imagePath, 'base64')
             .then((data) => {
                 //console.log(data);
                 return Blob.build(data, {type: `${mime};BASE64`})
@@ -113,22 +144,28 @@ class Database {
                 uploadBlob.close();
                 return imageRef.getDownloadURL()
             })
-            .then((url) => {
+    }
 
-                firebase
-                    .database()
-                    .ref(`/users/${this.uid}/profile`)
-                    .update({
-                        userpic: url
-                    })
-                    .then(() => {
-
-                    });
-
+    updateProfilePicture(imageUrl) {
+        const {currentUser} = firebase.auth();
+        return firebase
+            .database()
+            .ref(`/users/${currentUser.uid}/profile`)
+            .update({
+                userpic: imageUrl
             })
-            .catch((error) => {
-                console.log(error)
-            });
+    }
+
+    get getUser() {
+        return this.userProfile;
+    }
+
+    get getUid() {
+        return this.uid
+    }
+
+    get getMessagesRef() {
+        return this.messagesRef;
     }
 
 

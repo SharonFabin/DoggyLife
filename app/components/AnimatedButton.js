@@ -22,8 +22,18 @@ export default class AnimatedButton extends Component {
     }
 
     componentDidMount() {
-        this.buttonAnimated = new Animated.Value(0);
-        this.growAnimated = new Animated.Value(0);
+        this.buttonAnimated.setValue(0);
+        this.growAnimated.setValue(0)
+    }
+
+    componentWillUnmount() {
+        this.buttonAnimated.setValue(0);
+        this.growAnimated.setValue(0)
+    }
+
+    reset() {
+        this.buttonAnimated.setValue(0);
+        this.growAnimated.setValue(0)
     }
 
     onPress() {
@@ -41,7 +51,9 @@ export default class AnimatedButton extends Component {
             toValue: 1,
             duration: 700,
             easing: Easing.linear,
-        }).start();
+        }).start(() => setTimeout(() => {
+            this.reset();
+        }, 1000));
     }
 
     errorOccurred() {
@@ -77,6 +89,7 @@ export default class AnimatedButton extends Component {
                             <Text style={styles.text}>{this.props.title}</Text>
                         )}
                     </TouchableOpacity>
+
                     <Animated.View
                         style={[styles.circle, {transform: [{scale: changeScale}]}]}
                     />
