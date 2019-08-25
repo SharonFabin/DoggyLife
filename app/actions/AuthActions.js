@@ -10,6 +10,7 @@ import {
 import {Actions} from 'react-native-router-flux';
 import database from "../api/database";
 
+//xx
 const subscribeToAuthentication = () => {
     return dispatch => {
         dispatch({type: AUTH_LOGIN_USER});
