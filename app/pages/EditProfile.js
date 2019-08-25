@@ -12,7 +12,7 @@ const Blob = RNFetchBlob.polyfill.Blob;
 const fs = RNFetchBlob.fs;
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
 window.Blob = Blob;
-
+//kk
 class EditProfile extends Component {
     state = {
         userpic: '',
