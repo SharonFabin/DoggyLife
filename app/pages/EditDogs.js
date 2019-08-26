@@ -1,22 +1,34 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, Dimensions, ImageBackground, StyleSheet, View} from 'react-native';
+import {Dimensions, ImageBackground, StyleSheet, View} from 'react-native';
 import {Avatar, Input, Text} from 'react-native-elements';
-import Button from '../components/Button';
-import {Actions} from 'react-native-router-flux';
-import {connect} from 'react-redux';
-import {createUser} from '../actions/AuthActions';
 import {translate} from "../languageHelper";
 import Icon from "react-native-vector-icons/FontAwesome";
-import AnimatedButton from "../components/AnimatedButton";
 import {MaterialIndicator} from "react-native-indicators";
 import ImagePicker from "react-native-image-crop-picker";
-import {onSaveChanges} from "../actions";
+import database from "../api/database";
 
 class EditDogs extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            image: null,
+        };
+    }
+
+    pickImage() {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true,
+            includeBase64: true,
+        }).then(image => {
+            database.saveImageGetUrl(image, 'profile')
+                .then(url => {
+                    return database.updateProfilePicture(url);
+                })
+                .catch(err => alert(err));
+        });
     }
 
     render() {
@@ -81,10 +93,8 @@ class EditDogs extends Component {
 
 
 }
-export default connect(
-    null,
-    {onSaveChanges}
-)(EditDogs);
+
+export default (EditDogs);
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
