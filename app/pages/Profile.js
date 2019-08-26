@@ -11,6 +11,7 @@ import {translate} from "../languageHelper";
 import ImagePicker from 'react-native-image-crop-picker';
 import database from "../api/database";
 import LinearGradient from "react-native-linear-gradient";
+import {Actions} from 'react-native-router-flux';
 
 class Profile extends Component {
 
@@ -214,7 +215,7 @@ class Profile extends Component {
                                 name='plus'
                                 type='font-awesome'
                                 color='orange'
-                                onPress={() => this.setState({isVisible: true})}
+                                onPress={() => Actions.editDog()}
                             />
 
 

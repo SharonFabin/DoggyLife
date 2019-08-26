@@ -16,7 +16,8 @@ import {
     Map,
     Profile,
     Signup,
-    Welcome
+    Welcome,
+    EditDogs,
 } from './pages';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -53,6 +54,9 @@ const RouterComponent = () => (
                 <Scene key="createHighlight" component={CreateHighlight}/>
                 <Scene key="editHighlight" component={EditHighlight}/>
                 <Scene key="highlight" component={Highlight}/>
+                <Scene key="highlight" component={Highlight}/>
+                <Scene key="editDog" component={EditDogs}/>
+
 
             </Stack>
 
