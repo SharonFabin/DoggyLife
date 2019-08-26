@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
-import {Button, PermissionsAndroid, StyleSheet, View} from 'react-native';
+import {PermissionsAndroid, StyleSheet, View} from 'react-native';
 import MapView, {AnimatedRegion, Marker} from "react-native-maps";
-import {niceStyle2, noLabelNightStyle} from "../constants/mapStyles";
+import {niceStyle2} from "../constants/mapStyles";
 import Geolocation from 'react-native-geolocation-service';
 import {connect} from "react-redux";
 import {updateLocation, watchLocation} from "../actions";
 import markers from '../components/markers/markers';
-import {Avatar} from "react-native-elements";
+import {Avatar, Card, Icon} from "react-native-elements";
+import {translate} from "../languageHelper";
 
 const LATITUDE_DELTA = 0.009;
 const LONGITUDE_DELTA = 0.009;
@@ -32,8 +33,8 @@ class Map extends Component {
             region: {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+                latitudeDelta: 0.02,
+                longitudeDelta: 0.02,
             },
         };
     }
@@ -130,28 +131,24 @@ class Map extends Component {
 
     getLocation = () => {
         alert(this.state.region.latitude + " " + this.state.region.longitude);
-        this.setState({
-            mapStyle: noLabelNightStyle
-        });
-        // Geolocation.getCurrentPosition(
-        //     (position) => {
-        //         console.log(position);
-        //         this.setState({
-        //             region: {
-        //                 latitude: position.coords.latitude,
-        //                 longitude: position.coords.longitude,
-        //                 latitudeDelta: 0.0922,
-        //                 longitudeDelta: 0.0421,
-        //             }
-        //         });
-        //         this.props.updateLocation(this.state.longitude, this.state.latitude);
-        //
-        //     },
-        //     (error) => {
-        //         console.log(error.code, error.message);
-        //     },
-        //     {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
-        // );
+        Geolocation.getCurrentPosition(
+            (position) => {
+                this.setState({
+                    region: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: 0.02,
+                        longitudeDelta: 0.02,
+                    }
+                });
+                this.props.updateLocation(this.state.longitude, this.state.latitude);
+
+            },
+            (error) => {
+                console.log(error.code, error.message);
+            },
+            {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
+        );
     };
 
     renderUsersMarks() {
@@ -178,13 +175,28 @@ class Map extends Component {
         ))
     }
 
+    renderFooter() {
+        return (
+
+            <Card title={translate("what are you looking for")} containerStyle={styles.card}>
+                <View>
+                    <Avatar
+                        source={{uri: "https://media.cntraveler.com/photos/5a85c3c3b8ebbd42565cf888/4:5/w_767,c_limit/Place-Trocadero_2018_GettyImages-521062958.jpg"}}
+                        size={'large'}
+                        title={"meow?"}
+                        showEditButton
+                    />
+                </View>
+            </Card>
+        );
+    }
+
 
     render() {
 
 
         return (
             <View style={styles.container}>
-                <Button title="get location" onPress={this.getLocation.bind(this)}/>
                 <MapView style={styles.map} customMapStyle={this.state.mapStyle}
                          initialRegion={{
                              latitude: LATITUDE,
@@ -192,17 +204,24 @@ class Map extends Component {
                              latitudeDelta: 0.02,
                              longitudeDelta: 0.02,
                          }}
-                         region={{
-                             latitude: LATITUDE,
-                             longitude: LONGITUDE,
-                             latitudeDelta: 0.02,
-                             longitudeDelta: 0.02,
-                         }}
+                         region={this.state.region}
                 >
                     {this.renderUsersMarks()}
                     {this.renderPointsOfInterest()}
-
+                    {/*<Button title="get location" onPress={this.getLocation.bind(this)}/>*/}
                 </MapView>
+                <View style={styles.floating}>
+                    {/*<Button title="get location" onPress={this.getLocation.bind(this)}/>*/}
+                    <Icon
+                        raised
+                        name='gps-fixed'
+                        type='material'
+                        color='rgb(40,40,40)'
+                        iconStyle={styles.iconStyle}
+                        onPress={this.getLocation.bind(this)}
+                    />
+                    {this.renderFooter()}
+                </View>
             </View>
         );
     }
@@ -225,10 +244,35 @@ const styles = StyleSheet.create({
     },
     map: {
         width: '100%',
-        height: '100%'
+        height: '100%',
+        zIndex: -1,
     },
     mapIcon: {
         borderColor: '#435158',
         borderWidth: 2
-    }
+    },
+    floating: {
+        position: 'absolute',
+
+
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 10
+    },
+    card: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.37,
+        shadowRadius: 7.49,
+        elevation: 12,
+        borderTopRightRadius: 10,
+        borderTopLeftRadius: 10,
+
+        margin: 0
+    },
+    iconStyle: {}
 });

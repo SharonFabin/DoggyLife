@@ -3,7 +3,8 @@ import {PROFILE_EDIT, PROFILE_FETCH} from '../constants/ActionTypes';
 const INITIAL_STATE = {
     profile: {
         userpic: ""
-    }
+    },
+    dogs: {}
 };
 
 const profile = (state = INITIAL_STATE, action) => {
