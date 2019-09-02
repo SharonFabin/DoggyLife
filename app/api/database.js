@@ -1,6 +1,5 @@
 import firebase from 'firebase';
 import {firebaseConfig} from "../settings";
-import RNFetchBlob from "react-native-fetch-blob";
 
 
 class Database {
@@ -119,31 +118,31 @@ class Database {
     }
 
     saveImageGetUrl(image, imageName) {
-        if (!image || !imageName) return new Promise(
-            res => res("https://www.certified-parts.com/image/catalog/client/facebookanon.jpg"
-            ));
-
-        const {currentUser} = firebase.auth();
-        const Blob = RNFetchBlob.polyfill.Blob;
-        const fs = RNFetchBlob.fs;
-        const imagePath = image.path;
-        let uploadBlob = null;
-
-        const imageRef = firebase.storage().ref().child(`profile/${currentUser.uid}/images/${imageName}.jpg`);
-        let mime = 'image/jpg';
-        return fs.readFile(imagePath, 'base64')
-            .then((data) => {
-                //console.log(data);
-                return Blob.build(data, {type: `${mime};BASE64`})
-            })
-            .then((blob) => {
-                uploadBlob = blob;
-                return imageRef.put(blob, {contentType: mime})
-            })
-            .then(() => {
-                uploadBlob.close();
-                return imageRef.getDownloadURL()
-            })
+        // if (!image || !imageName) return new Promise(
+        //     res => res("https://www.certified-parts.com/image/catalog/client/facebookanon.jpg"
+        //     ));
+        //
+        // const {currentUser} = firebase.auth();
+        // const Blob = RNFetchBlob.polyfill.Blob;
+        // const fs = RNFetchBlob.fs;
+        // const imagePath = image.path;
+        // let uploadBlob = null;
+        //
+        // const imageRef = firebase.storage().ref().child(`profile/${currentUser.uid}/images/${imageName}.jpg`);
+        // let mime = 'image/jpg';
+        // return fs.readFile(imagePath, 'base64')
+        //     .then((data) => {
+        //         //console.log(data);
+        //         return Blob.build(data, {type: `${mime};BASE64`})
+        //     })
+        //     .then((blob) => {
+        //         uploadBlob = blob;
+        //         return imageRef.put(blob, {contentType: mime})
+        //     })
+        //     .then(() => {
+        //         uploadBlob.close();
+        //         return imageRef.getDownloadURL()
+        //     })
     }
 
     updateProfilePicture(imageUrl) {

@@ -132,6 +132,17 @@ class Profile extends Component {
         );
     }
 
+    gogo() {
+        fetch('https://facebook.github.io/react-native/movies.json')
+            .then((response) => response.json())
+            .then((responseJson) => {
+                alert(responseJson.movies);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
     render() {
         let pic = 'http://www.puppyhavenatl.com/wp-content/uploads/2018/02/Doggy-Daycare-JRT-1024x732.jpg';
         return (
@@ -214,7 +225,7 @@ class Profile extends Component {
                                 name='plus'
                                 type='font-awesome'
                                 color='orange'
-                                onPress={() => this.setState({isVisible: true})}
+                                onPress={() => this.gogo}
                             />
 
 
@@ -271,6 +282,7 @@ const styles = StyleSheet.create({
         textShadowRadius: 10
     },
     statusText: {
+        fontFamily: 'chelsea',
         color: 'rgb(255,255,255)',
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
         textShadowOffset: {width: -1, height: 1},

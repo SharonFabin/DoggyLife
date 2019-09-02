@@ -8,7 +8,6 @@ import {
     ConfigPost,
     CreateHighlight,
     EditHighlight,
-    EditProfile,
     Explore,
     Highlight,
     Home,
@@ -49,7 +48,6 @@ const RouterComponent = () => (
                 </Tabs>
 
                 <Scene key="configPost" component={ConfigPost}/>
-                <Scene key="editProfile" component={EditProfile}/>
                 <Scene key="createHighlight" component={CreateHighlight}/>
                 <Scene key="editHighlight" component={EditHighlight}/>
                 <Scene key="highlight" component={Highlight}/>

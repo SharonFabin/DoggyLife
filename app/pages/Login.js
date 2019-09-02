@@ -6,7 +6,7 @@ import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 import {loginUser} from '../actions';
 import AnimatedButton from "../components/AnimatedButton";
-import {translate} from "../languageHelper";
+import {local, translate} from "../languageHelper";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 class Login extends Component {
@@ -16,20 +16,16 @@ class Login extends Component {
         this.state = {
             username: '',
             password: '',
-            text: translate("login")
+            text: translate("login"),
+            dir: local.isRTL ? 'right' : 'left'
         };
-
         this.onPressLogin.bind(this);
         this.checkSuccess = this.checkSuccess.bind(this);
         this.animatedButton = React.createRef();
     }
 
     componentDidMount() {
-        alert("hello from login");
-    }
-
-    componentWillUnmount() {
-        alert("bye bye from login");
+        alert(this.state.dir);
     }
 
     onChangeUser = text => {
@@ -120,6 +116,7 @@ class Login extends Component {
                                 this.secondTextInput.focus();
                             }}
                             value={this.state.username}
+                            underlineColorAndroid='transparent'
                         />
                         <Input
                             placeholder={translate("password")}
@@ -127,13 +124,14 @@ class Login extends Component {
                             leftIconContainerStyle={styles.iconContainerStyle}
                             containerStyle={styles.inputContainer}
                             inputContainerStyle={styles.inputInputContainer}
-                            inputStyle={styles.inputInput}
+                            inputStyle={[styles.inputInput, {textAlign: this.state.dir}]}
                             ref={(input) => {
                                 this.secondTextInput = input;
                             }}
                             onChangeText={this.onChangePassword.bind(this)}
                             value={this.state.password}
-                            secureTextEntry
+                            secureTextEntry={true}
+                            underlineColorAndroid='transparent'
                         />
                     </View>
                     {this.renderErrors()}
@@ -232,6 +230,9 @@ const styles = StyleSheet.create({
         width: DEVICE_WIDTH - 20,
         height: 40,
         marginBottom: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center'
     },
     inputInputContainer: {
         flex: 1,
@@ -246,8 +247,7 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 16,
         padding: 0,
-        marginRight: 10
-
+        marginRight: 10,
 
     },
     iconContainerStyle: {

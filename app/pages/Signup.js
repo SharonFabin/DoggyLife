@@ -5,7 +5,7 @@ import Button from '../components/Button';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 import {createUser} from '../actions/AuthActions';
-import {translate} from "../languageHelper";
+import {local, translate} from "../languageHelper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AnimatedButton from "../components/AnimatedButton";
 import {MaterialIndicator} from "react-native-indicators";
@@ -22,7 +22,7 @@ class Signup extends Component {
             password: '',
             text: translate('register'),
             loading: false,
-
+            dir: local.isRTL ? 'right' : 'left'
         };
         this.onPressSignUp.bind(this);
         this.checkSuccess = this.checkSuccess.bind(this);
@@ -167,7 +167,7 @@ class Signup extends Component {
                             leftIconContainerStyle={styles.iconContainerStyle}
                             containerStyle={styles.inputContainer}
                             inputContainerStyle={styles.inputInputContainer}
-                            inputStyle={styles.inputInput}
+                            inputStyle={[styles.inputInput, {textAlign: this.state.dir}]}
                             onChangeText={this.onChangePassword.bind(this)}
                             ref={(input) => {
                                 this.thirdInput = input;
@@ -184,7 +184,7 @@ class Signup extends Component {
                             leftIconContainerStyle={styles.iconContainerStyle}
                             containerStyle={styles.inputContainer}
                             inputContainerStyle={styles.inputInputContainer}
-                            inputStyle={styles.inputInput}
+                            inputStyle={[styles.inputInput, {textAlign: this.state.dir}]}
                             ref={(input) => {
                                 this.fourthInput = input;
                             }}

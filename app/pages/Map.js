@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import {PermissionsAndroid, StyleSheet, View} from 'react-native';
+import {PermissionsAndroid, StyleSheet, Text, View} from 'react-native';
 import MapView, {AnimatedRegion, Marker} from "react-native-maps";
 import {niceStyle2} from "../constants/mapStyles";
 import Geolocation from 'react-native-geolocation-service';
 import {connect} from "react-redux";
 import {updateLocation, watchLocation} from "../actions";
 import markers from '../components/markers/markers';
-import {Avatar, Card, Icon} from "react-native-elements";
-import {translate} from "../languageHelper";
+import {Avatar} from "react-native-elements";
+import DraggableView from "../components/map/DraggableView";
+import CardContainer from "../components/map/CardContainer";
 
 const LATITUDE_DELTA = 0.009;
 const LONGITUDE_DELTA = 0.009;
@@ -175,26 +176,7 @@ class Map extends Component {
         ))
     }
 
-    renderFooter() {
-        return (
-
-            <Card title={translate("what are you looking for")} containerStyle={styles.card}>
-                <View>
-                    <Avatar
-                        source={{uri: "https://media.cntraveler.com/photos/5a85c3c3b8ebbd42565cf888/4:5/w_767,c_limit/Place-Trocadero_2018_GettyImages-521062958.jpg"}}
-                        size={'large'}
-                        title={"meow?"}
-                        showEditButton
-                    />
-                </View>
-            </Card>
-        );
-    }
-
-
-    render() {
-
-
+    renderMap() {
         return (
             <View style={styles.container}>
                 <MapView style={styles.map} customMapStyle={this.state.mapStyle}
@@ -210,19 +192,42 @@ class Map extends Component {
                     {this.renderPointsOfInterest()}
                     {/*<Button title="get location" onPress={this.getLocation.bind(this)}/>*/}
                 </MapView>
-                <View style={styles.floating}>
-                    {/*<Button title="get location" onPress={this.getLocation.bind(this)}/>*/}
-                    <Icon
-                        raised
-                        name='gps-fixed'
-                        type='material'
-                        color='rgb(40,40,40)'
-                        iconStyle={styles.iconStyle}
-                        onPress={this.getLocation.bind(this)}
-                    />
-                    {this.renderFooter()}
-                </View>
+
             </View>
+        );
+    }
+
+
+    // renderFooter() {
+    //     return (
+    //
+    //
+    //         <Drawer
+    //             initialDrawerSize={0.09}
+    //             renderContainerView={() => this.renderMap()}
+    //             renderDrawerView={() => (
+    //                 <View style={{backgroundColor: 'white', height: 66,}}>
+    //                 </View>
+    //             )}
+    //             renderInitDrawerView={() => (<View><Text>hi</Text></View>)}
+    //         />
+    //     );
+    // }
+
+
+    render() {
+
+
+        return (
+
+            <DraggableView
+                initialDrawerSize={0.1}
+                renderContainerView={() => this.renderMap()}
+                renderDrawerView={() => (
+                    <CardContainer/>
+                )}
+                renderInitDrawerView={() => (<View style={styles.card}><Text>hi</Text></View>)}
+            />
         );
     }
 }

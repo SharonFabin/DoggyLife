@@ -4,6 +4,8 @@ import i18n from "i18n-js";
 import memoize from "lodash.memoize"; // Use for caching/memoize for better performance
 import {I18nManager,} from "react-native";
 
+export var local = {languageTag: "en", isRTL: false};
+
 const translationGetters = {
     // lazy requires (metro bundler does not support symlinks)
     he: () => require("./constants/languages/he.json"),
@@ -22,6 +24,8 @@ export const setI18nConfig = () => {
     const {languageTag, isRTL} =
     RNLocalize.findBestAvailableLanguage(Object.keys(translationGetters)) ||
     fallback;
+
+    local = {languageTag, isRTL};
 
     // clear translation cache
     translate.cache.clear();
